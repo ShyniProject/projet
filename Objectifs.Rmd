@@ -1,0 +1,70 @@
+---
+title: "Pathways objectifs"
+output: pdf_document
+---
+# Accueil
+
+## Aperçu des données
+- datatable des données RNAseq.
+
+## Clickable Volcano & MA plots
+https://2-bitbio.com/2017/12/clickable-volcano-plots-in-shiny.html
+
+## Bonus
+https://www.bioconductor.org/packages/devel/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html
+
+## Bouton test
+- Au lieu du nombre de ligne -> bouton jeu de données test
+
+## Barre verticale
+- Revoir, mettre onglets : whole data inspection, GO, pathway, domains
+
+# GO
+## Bouton 
+- histo/pie chart / dot plot
+- choix du tri 
+
+## GSEA 
+- pval->padj
+
+# Domains
+- Domaines != motif 
+- Enrichissement comparé données exp avec genome complet 
+- combien de protéines ont le domaine en moyenne -> repartition des domaines / nb de protéines (en forme de tableau)
+
+# Pathway
+## BDD
+- Reactome ? Metacyc ?
+
+## Tableau
+
+### Priorités
+- pathways names + effectifs des gènes du pathways
+
+### Bonus 
+- *Lien cliquable* du pathways vers KEGG.
+
+
+## SEA
+- pathways avec le plus de gènes impliqués avec un seuil précisé par l'utilisateur. 
+
+## GSEA
+- *enrichKegg()* : pathways avec p-value 
+
+## Pathways map
+
+- *AfficherMap()* : récupérer .png généré par *pathview()*;
+- **checklist** avec pathways selon *SEA /GSEA * 
+- affichage dynamique selon pathways choisis
+
+### Bonus 
+- modifier les images générées en fonctions des options précisées par l'utilisateur de la fonction *pathview()*.
+- figure pour grouper l'ensemble des analyses : *manhattan plot*
+
+#Serveur
+- Standalone ?
+- local ?
+
+# Documentation
+## Packages
+- version etc ( c'est jéjé qui a marqué ça !!!)
