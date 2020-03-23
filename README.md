@@ -1,7 +1,3 @@
----
-title: 'Shiny project documentation'
-disqus: Team
----
 Shiny Project
 ===
 ![downloads](https://img.shields.io/github/downloads/atom/atom/total.svg)
