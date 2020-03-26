@@ -9,7 +9,7 @@
 
 ui <- fluidPage(
   h1("Clickable Volcano Plots!"),
-  sliderInput('cpmCut', label="log(CPM) cutoff",0,10,2, width="200px"), # Sélection du seuil pour le foldchange
+  sliderInput('logFcCut', label="log(CPM) cutoff",0,10,2, width="200px"), # Sélection du seuil pour le foldchange
   sliderInput('padjCut', label="padj cutoff",0,1,0.05, width="200px"),  # Sélection du seuil de la pvalue ajusté
   plotOutput('volcanoPlot',click='plot_click.Volcano'), #VolcanoPlot
   tableOutput('clickedPoints.Volcano'), # Tableau correspondant à la zone cliqué du VolcanoPlot
@@ -22,7 +22,9 @@ server <- function(input, output) {
     read_csv(file="https://raw.githubusercontent.com/ShyniProject/Rendu/master/GSE129081_small.csv", col_names = TRUE)
   })
   dataFilter <- reactive({
-    data.filtering(dataFrame()) # Filtre et travail sur les données 
+    data.filtering(input = dataFrame(),
+                   logFcCut = input$logFcCut,
+                   padjCut = input$padjCut) # Filtre et travail sur les données 
   })
   
   output$volcanoPlot <- renderPlot({ 

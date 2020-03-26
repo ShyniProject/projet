@@ -7,16 +7,23 @@
 #######################################################
 
 ##Fonction 
-data.filtering=function(input){
+data.filtering=function(input,logFcCut,padjCut){
   mutate.input=input %>% 
-    mutate(SigFC=ifelse(abs(log2FoldChange)>2, 2, 0)) %>%
-    mutate(SigPadj=ifelse(padj<0.05,1,0)) %>%
-    mutate(Sig=SigFC+SigPadj) %>%
+    mutate(SigFC=ifelse(abs(log2FoldChange)>logFcCut, 1, 0)) %>%
+    mutate(SigPadj=ifelse(padj<padjCut,1,0)) %>%
+    mutate(Legendary=ifelse(SigFC==1,
+                      ifelse(SigPadj==1, #SigFC vaut 1
+                             paste0("logFC>",logFcCut," and padj<",padjCut),
+                             paste0("logFC>",logFcCut)),
+                      ifelse(SigPadj==1, #SigFC=0
+                             paste0("padj<",padjCut),
+                             paste0("logFC<",logFcCut," and padj>",padjCut)))) %>%
     mutate(negLogpadj=-log10(padj)) %>%
     mutate(logBaseMean=log(baseMean,2)) %>%
     select(id:Orthologous_human_gene,Sig:logBaseMean)
   return(mutate.input)
 }
+View(data.filtering(data,2,0.05))
 #VolcanoPlot
 VolcanoPlot=function(data){
   ggplot(data,aes(x=log2FoldChange, y=negLogpadj, color=Sig)) +
@@ -27,7 +34,7 @@ VolcanoPlot=function(data){
 }
 #MAPlot
 MaPlot=function(data){
-  ggplot(mutate.input,aes(x=logBaseMean, y=log2FoldChange, color=Sig)) +
+  ggplot(data,aes(x=logBaseMean, y=log2FoldChange, color=Sig)) +
     geom_point() +
     coord_cartesian() +
     ylab("log2 FC") +
