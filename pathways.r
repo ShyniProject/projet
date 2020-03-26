@@ -12,15 +12,20 @@ pathways = tabItem(tabName = "pathways",
     column(width = 12,
       box(collapsible = TRUE,
         title = "Enrichment results - GSEA", status = "primary", width = NULL,
+        column(width = 10,
           DT::dataTableOutput("K.GSEA.Table") %>% withSpinner()
         ),
+        column(width = 2,
+          downloadButton("dl.KEGG", "Download")
+        )
+      ),
       box(collapsible = TRUE,
         title = "Dot plot - GSEA", status = "primary", width = NULL,
         column(width = 3,
           numericInput("categNb_DP", "Category number : ", 10, min = 1, max = 40, step = 5)
         ),
         column(width = 9,
-          plotlyOutput("dotPlot.KEGG") %>% withSpinner(type = 6)
+          plotOutput("dotPlot.KEGG") %>% withSpinner(type = 6)
           )
         ),     
     ),

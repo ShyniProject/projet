@@ -63,26 +63,31 @@ function(input, output, session) {
 
         ## TABLE ##
         incProgress(2/5, detail = "dynamic results table...")    
-        K.GSEA_description = select(Kegg.GSEA@result, ID, Description)
+        K.GSEA_description = dplyr::select(Kegg.GSEA@result, ID, Description)
         K.GSEA_description$ID = paste0("<a href=https://www.kegg.jp/kegg-bin/show_pathway?", K.GSEA_description$ID," target='_blank'>",K.GSEA_description$ID,"</a>")
-        K.GSEA_value = select(Kegg.GSEA@result, setSize:p.adjust, -NES) %>% round(3)
+        K.GSEA_value = dplyr::select(Kegg.GSEA@result, setSize:p.adjust, -NES) %>% round(3)
         K.GSEA = cbind(K.GSEA_description, K.GSEA_value)
-        
+        K.GSEAtoSAVE = dplyr::select(K.GSEA, everything(), -ID)
         output$K.GSEA.Table = DT::renderDataTable({
           K.GSEA
         }, escape = F) # escape FALSE to make url
-        
+        output$dl.KEGG <- downloadHandler(
+          filename = "KEGGResults_GSEA.csv",
+          content = function(filename) {
+            write.csv(K.GSEAtoSAVE, filename, row.names = T)
+          }
+        )
         ## PLOTS ##
         incProgress(3/5, detail = "Enrichment dot plot...")
-        output$dotPlot.KEGG <- renderPlotly({ dotplot(Kegg.GSEA, showCategory=input$categNb_DP) + ggtitle("dotplot for GSEA") })
+        output$dotPlot.KEGG <- renderPlot({ clusterProfiler::dotplot(Kegg.GSEA, showCategory=input$categNb_DP) + ggtitle("dotplot for GSEA") })
         incProgress(4/5, detail = "Enrichment ridge plot...")
-        output$ridgePlot.kegg <- renderPlot({ ridgeplot(Kegg.GSEA, showCategory=input$categNb_RP) })
+        output$ridgePlot.kegg <- renderPlot({ clusterProfiler::ridgeplot(Kegg.GSEA, showCategory=input$categNb_RP) })
         
         ## Pathway viewer ##
 
         #selectBox's update with pathway ids
         input$pathwayChoice
-        updateSelectInput(session, "pathwayChoice", choices = row.names(K.GSEA_description), selected = NULL) 
+        updateSelectInput(session, "pathwayChoice", choices = row.names(K.GSEA_description), selected = NULL)
         
         incProgress(5/5, detail = "Pathway map visualization...")
         observe({
@@ -92,7 +97,7 @@ function(input, output, session) {
           output$pathwayViewer <- renderImage({
             pathPNG <- pathview(gene.data  = logF,
                                 pathway.id = input$pathwayChoice,
-                                species    = "dre")
+                                species = "dre")
 
             list(src = paste0(input$pathwayChoice, ".pathview.png"),
                  contentType = 'image/png',
@@ -104,11 +109,46 @@ function(input, output, session) {
       }) # GSEA progress bar end
         
         ########################################################
+        ##########  Protein Domains  ##########
+        ########################################################
+        ## Protein domains DATA
+        
+        pDomains = read.csv("mart_export.txt") 
+        pD.TERM2GENE = dplyr::select(pDomains, Interpro.ID, Gene.stable.ID)
+        pD.TERM2GENE$Gene.stable.ID <- mapIds(org.Dr.eg.db, as.vector(pD.TERM2GENE$Gene.stable.ID), 'ENTREZID', 'ENSEMBL')
+        # pD.TERM2NAME = unique(pDomains$Interpro.Description) ; names(pD.TERM2NAME) = unique(pDomains$Interpro.ID)
+        pD.TERM2NAME = dplyr::select(pDomains, Interpro.ID, Interpro.Description)
+        
+        gene = pvalues[pvalues<0.05]
+        
+        ## ANALYSIS ##
+        pDomains.SEA = enricher(names(gene), TERM2GENE = pD.TERM2GENE, TERM2NAME = pD.TERM2NAME)
+        
+        ## TABLE ## 
+        proteinDomains.SEA_description = dplyr::select(pDomains.SEA@result, ID, Description)
+        proteinDomains.SEA_description$ID = paste0("<a href=https://www.gsea-msigdb.org/gsea/msigdb/geneset_page.jsp?geneSetName=", proteinDomains.SEA_description$ID," target='_blank'>",proteinDomains.SEA_description$ID,"</a>")
+        proteinDomains.SEA_value = dplyr::select(pDomains.SEA@result, everything(), -ID, -Description , -GeneRatio, -geneID,-BgRatio) %>% round(4)
+        proteinDomains.SEA = cbind(proteinDomains.SEA_description, proteinDomains.SEA_value)
+        proteinDomains.SEAtoSAVE = dplyr::select(proteinDomains.SEA, everything(), -ID)
+        
+        output$proteinDomains.SEA.Table = DT::renderDataTable({
+          proteinDomains.SEA
+        }, escape = F) # escape FALSE to make url
+        
+        output$dl.pDomains <- downloadHandler(
+          filename = "proteinDomainsResults_SEA.csv",
+          content = function(filename) {
+            write.csv(proteinDomains.SEAtoSAVE, filename, row.names = T)
+          }
+        )
+        ## PLOTS ##
+        output$dotPlot.pDomains <- renderPlot({ clusterProfiler::dotplot(pDomains.SEA, showCategory=input$categNb_DP.D, ) + ggtitle("dotplot for GSEA") })
+        
+        ########################################################
         ##########  Motifs  ##########
         ########################################################
         ## MOTIFS (GENE SET) DATA
         motif.geneSet = msigdbr(species = "Danio rerio", category = "C3")
-        head(motif.geneSet)
         motif.TERM2GENE = motif.geneSet %>% dplyr::select(gs_name, entrez_gene) %>% as.data.frame()
         
         ### SEA ###
@@ -123,15 +163,23 @@ function(input, output, session) {
         head(motifs.GSEA@result$ID) # 0
         
         ## TABLE ##
-        Motif.GSEA_description = select(motifs.GSEA@result, ID, Description)
+        Motif.GSEA_description = dplyr::select(motifs.GSEA@result, ID, Description)
         Motif.GSEA_description$ID = paste0("<a href=https://www.gsea-msigdb.org/gsea/msigdb/geneset_page.jsp?geneSetName=", Motif.GSEA_description$ID," target='_blank'>",Motif.GSEA_description$ID,"</a>")
-        Motif.GSEA_value = select(motifs.GSEA@result, setSize:p.adjust, -NES) %>% round(3)
+        Motif.GSEA_value = dplyr::select(motifs.GSEA@result, setSize:p.adjust, -NES) %>% round(3)
         Motif.GSEA = cbind(Motif.GSEA_description, Motif.GSEA_value)
+        Motif.GSEAtoSAVE = dplyr::select(K.GSEA, everything(), -ID)
         
         output$Motif.GSEA.Table = DT::renderDataTable({
           Motif.GSEA
         }, escape = F) # escape FALSE to make url
         
+        output$dl.KEGG <- downloadHandler(
+          filename = "MotifResults_GSEA.csv",
+          content = function(filename) 
+          {
+            write.csv(Motif.GSEAtoSAVE, filename, row.names = T)
+          }
+        )
         ## PLOTS ##
         output$dotPlot.Motif <- renderPlot({ dotplot(motifs.GSEA, showCategory=input$categNb_DP.M, ) + ggtitle("dotplot for GSEA") })
         output$ridgePlot.Motif <- renderPlot({ ridgeplot(motifs.GSEA, showCategory=input$categNb_RP.M) })

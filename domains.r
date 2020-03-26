@@ -1,23 +1,46 @@
 domains <- tabItem(tabName = "domains",
                    h2("Domains"),
                    h3("SEA"),
-                   h3("GSEA"),
+                   sliderInput("pv.DomainsSEA", label = h3("p-value threshold : "), min = 0, 
+                               max = 0.1, value = 0.05),
+                   fluidRow(
+                     column(width = 12,
+                            box(collapsible = TRUE,
+                                title = "Enrichment results - SEA", status = "info", width = NULL,
+                                column(width = 10,
+                                       DT::dataTableOutput("proteinDomains.SEA.Table") %>% withSpinner(color = "#14D6E2")
+                                ),
+                                column(width = 2,
+                                       downloadButton("dl.pDomains", "Download")   
+                                )
+                            ),
+                            box(collapsible = TRUE,
+                                title = "Dot plot - SEA", status = "info", width = NULL,
+                                column(width = 3,
+                                       numericInput("categNb_DP.D", "Category number : ", 10, min = 1, max = 40, step = 5)
+                                ),
+                                column(width = 9,
+                                       plotOutput("dotPlot.pDomains") %>% withSpinner(color = "#14D6E2", type = 6)
+                                )
+                            ),     
+                     ),
+                   ),
+                   
+                   
                    
                    h2("Motifs"),
-                   h3("SEA"),
-                   sliderInput("pv.Domain", label = h3("p-value threshold : "), min = 0, 
-                               max = 0.1, value = 0.05),
-      
                    h3("GSEA"),
                    fluidRow(
                      column(width = 12,
                             box(collapsible = TRUE,
-                                title = "Enrichment results - GSEA", status = "info", width = NULL,
-                                DT::dataTableOutput("Motif.GSEA.Table") %>% withSpinner(color = "#14D6E2")
+                                  title = "Enrichment results - GSEA", status = "info", width = NULL,
+                                column(width = 10,
+                                  DT::dataTableOutput("Motif.GSEA.Table") %>% withSpinner(color = "#14D6E2")
+                                ),
+                                column(width = 2,
+                                  downloadButton("dl.Motif", "Download")   
+                                )
                             ),
-                            #   ),),
-                            # fluidRow(
-                            # column(width = 12,
                             box(collapsible = TRUE,
                                 title = "Dot plot - GSEA", status = "info", width = NULL,
                                 column(width = 3,
@@ -38,4 +61,6 @@ domains <- tabItem(tabName = "domains",
                                        plotOutput("ridgePlot.Motif") %>% withSpinner(color = "#14D6E2", type = 6)
                                 )
                             )
-  )
+                     )
+                   )
+)
