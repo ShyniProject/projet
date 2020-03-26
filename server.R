@@ -43,11 +43,53 @@ function(input, output, session) {
       ### SEA ###
         ## ANALYSIS ##
       withProgress(message = 'SEA ... ', value = 0, {
-        
-        ################### A FAIRE #################
-        
-      })
+
+        gene = pvalues[pvalues<0.05]
+        Kegg.SEA = enrichKEGG(gene = names(gene),
+                   organism     = 'dre',
+                   pvalueCutoff = 0.05)
+        ## TABLE ##
+        incProgress(2/5, detail = "dynamic results table...")    
+        K.SEA_description = dplyr::select(Kegg.SEA@result, ID, Description)
+        K.SEA_description$ID = paste0("<a href=https://www.kegg.jp/kegg-bin/show_pathway?", K.SEA_description$ID," target='_blank'>",K.SEA_description$ID,"</a>")
+        K.SEA_value = dplyr::select(Kegg.SEA@result, everything(), -ID, -Description , -GeneRatio, -geneID,-BgRatio) %>% round(4)
+        K.SEA = cbind(K.SEA_description, K.SEA_value)
+        K.SEAtoSAVE = dplyr::select(K.SEA, everything(), -ID)
+        output$K.SEA.Table = DT::renderDataTable({
+          K.SEA
+        }, escape = F) # escape FALSE to make url
+        output$dl.KEGG_SEA <- downloadHandler(
+          filename = "KEGGResults_SEA.csv",
+          content = function(filename) {
+            write.csv(K.SEAtoSAVE, filename, row.names = T)
+          }
+        )
         ## PLOTS ##
+        incProgress(4/5, detail = "Enrichment dot plot...")
+        output$dotPlot.KEGG_SEA <- renderPlot({ clusterProfiler::dotplot(Kegg.SEA, showCategory=input$categNb_DP_SEAK) + ggtitle("dotplot for SEA") })
+        
+        ## PATHVIEW - SEA##
+        incProgress(5/5, detail = "Pathway map afterSEA visualization...")
+        #selectBox's update with pathway ids
+        input$pathwayChoice_SEA
+        updateSelectInput(session, "pathwayChoice_SEA", choices = row.names(K.SEA_description), selected = NULL)
+        
+        observe({
+          if (input$pathwayChoice_SEA != "")
+          {
+            output$pathwayViewer_SEA <- renderImage({
+              pathPNG <- pathview(gene.data  = gene,
+                                  pathway.id = input$pathwayChoice_SEA,
+                                  species = "dre")
+              
+              list(src = paste0(input$pathwayChoice_SEA, ".pathview.png"),
+                   contentType = 'image/png',
+                   width = session$clientData$output_pathwayViewer_width*session$clientData$pixelratio*0.7,
+                   height = session$clientData$output_pathwayViewer_height*session$clientData$pixelratio
+              )
+              
+            })}})
+      })
       
       ### GSEA ###
         ## ANALYSIS
@@ -126,7 +168,7 @@ function(input, output, session) {
         
         ## TABLE ## 
         proteinDomains.SEA_description = dplyr::select(pDomains.SEA@result, ID, Description)
-        proteinDomains.SEA_description$ID = paste0("<a href=https://www.gsea-msigdb.org/gsea/msigdb/geneset_page.jsp?geneSetName=", proteinDomains.SEA_description$ID," target='_blank'>",proteinDomains.SEA_description$ID,"</a>")
+        proteinDomains.SEA_description$ID = paste0("<a href=https://www.ebi.ac.uk/interpro/entry/InterPro/IPR001064/", proteinDomains.SEA_description$ID," target='_blank'>",proteinDomains.SEA_description$ID,"</a>")
         proteinDomains.SEA_value = dplyr::select(pDomains.SEA@result, everything(), -ID, -Description , -GeneRatio, -geneID,-BgRatio) %>% round(4)
         proteinDomains.SEA = cbind(proteinDomains.SEA_description, proteinDomains.SEA_value)
         proteinDomains.SEAtoSAVE = dplyr::select(proteinDomains.SEA, everything(), -ID)
