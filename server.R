@@ -17,6 +17,7 @@ function(input, output, session) {
       pvalues <- d$padj 
       names(pvalues) <- entrezID
       
+      ## for GSEA : LogF vector and gene ids
       logF = d$log2FoldChange 
       names(logF) <- entrezID
       logF = logF[which(!is.na(names(logF)))] ; logF = na.exclude(logF)#17 809 samples
@@ -79,7 +80,7 @@ function(input, output, session) {
         
         ## Pathway viewer ##
 
-        #select box update with pathway ids
+        #selectBox's update with pathway ids
         input$pathwayChoice
         updateSelectInput(session, "pathwayChoice", choices = row.names(K.GSEA_description), selected = NULL) 
         
@@ -100,7 +101,7 @@ function(input, output, session) {
             )
 
         })}})
-      }) # GSEA progress bar finished
+      }) # GSEA progress bar end
         
         ########################################################
         ##########  Motifs  ##########
@@ -130,6 +131,8 @@ function(input, output, session) {
         output$Motif.GSEA.Table = DT::renderDataTable({
           Motif.GSEA
         }, escape = F) # escape FALSE to make url
+        
+        ## PLOTS ##
         output$dotPlot.Motif <- renderPlot({ dotplot(motifs.GSEA, showCategory=input$categNb_DP.M, ) + ggtitle("dotplot for GSEA") })
         output$ridgePlot.Motif <- renderPlot({ ridgeplot(motifs.GSEA, showCategory=input$categNb_RP.M) })
   }) })
