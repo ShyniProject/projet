@@ -223,7 +223,7 @@ function(input, output, session) {
         dataFilteredGO <-  DataFilterGO(d)
         
         ########################## GO SEA #######################################
-        incProgress(2/5, detail = "GO SEA analysis...")
+        incProgress(2/5, detail = "SEA analysis...")
         SEA_result <- SEAanalysis(dataFilteredGO)
         
         #### Plots ####
@@ -244,7 +244,7 @@ function(input, output, session) {
         ########################## GO GSEA #######################################
         
         
-        incProgress(4/5, detail = "GO GSEA analysis...")
+        incProgress(4/5, detail = "GSEA analysis...")
         GSEA_result <- GSEAanalysis(dataFilteredGO)
         
         
