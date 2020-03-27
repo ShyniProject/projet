@@ -27,12 +27,18 @@ source("domains.r")
 GO <- tabItem(tabName = "GO",
                h1("Gene Ontology"),
                h2("SEA"),
+               h3("Biological Process"),
                plotOutput('SEA_bp'),
+               h3("Molecular Function"),
                plotOutput('SEA_mf'),
+               h3("Cellular Component"),
                plotOutput('SEA_cc'),
                h2("GSEA"),
+               h3("Biological Process"),
                plotOutput('GSEA_bp'),
+               h3("Molecular Function"),
                plotOutput('GSEA_mf'),
+               h3("Cellular Component"),
                plotOutput('GSEA_cc'),
 )
 

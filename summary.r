@@ -8,11 +8,6 @@ summary = tabItem(tabName = "summary",
     buttonLabel = "Browse...",
     placeholder = "No file selected"),
   
-  ## pvalue
-  sliderInput("pv", label = h3("p-value threshold : "), min = 0, 
-    max = 0.1, value = 0.05),
-  textOutput("text"),  
-  
   h1("Clickable Volcano Plots!"),
   sliderInput('logFcCut', label="log(CPM) cutoff",0,10,2, width="200px"), # Sélection du seuil pour le foldchange
   sliderInput('padjCut', label="padj cutoff",0,1,0.05, width="200px"),  # Sélection du seuil de la pvalue ajusté

@@ -145,6 +145,43 @@ function(input, output, session) {
 
         })}})
       }) # GSEA progress bar end
+        ########################################################
+        ##########  Protein Domains  ##########
+        ########################################################
+        ## Protein domains DATA
+        
+        pDomains = read.csv("mart_export_INTERPRO.txt") 
+        pD.TERM2GENE = dplyr::select(pDomains, Interpro.ID, Gene.stable.ID)
+        pD.TERM2GENE$Gene.stable.ID <- mapIds(org.Dr.eg.db, as.vector(pD.TERM2GENE$Gene.stable.ID), 'ENTREZID', 'ENSEMBL')
+        # pD.TERM2NAME = unique(pDomains$Interpro.Description) ; names(pD.TERM2NAME) = unique(pDomains$Interpro.ID)
+        pD.TERM2NAME = dplyr::select(pDomains, Interpro.ID, Interpro.Description)
+        
+        gene = pvalues[pvalues<0.05]
+        
+        ## ANALYSIS ##
+        pDomains.SEA = enricher(names(gene), TERM2GENE = pD.TERM2GENE, TERM2NAME = pD.TERM2NAME)
+        
+        ## TABLE ## 
+        proteinDomains.SEA_description = dplyr::select(pDomains.SEA@result, ID, Description)
+        proteinDomains.SEA_description$ID = paste0("<a href=https://www.ebi.ac.uk/interpro/entry/InterPro/IPR001064/", 
+                                                   proteinDomains.SEA_description$ID," target='_blank'>",proteinDomains.SEA_description$ID,"</a>")
+        proteinDomains.SEA_value = dplyr::select(pDomains.SEA@result, everything(), -ID, -Description , -GeneRatio, -geneID,-BgRatio) %>% round(4)
+        proteinDomains.SEA = cbind(proteinDomains.SEA_description, proteinDomains.SEA_value)
+        proteinDomains.SEAtoSAVE = dplyr::select(proteinDomains.SEA, everything(), -ID)
+        
+        output$proteinDomains.SEA.Table = DT::renderDataTable({
+          proteinDomains.SEA
+        }, escape = F) # escape FALSE to make url
+        
+        output$dl.pDomains <- downloadHandler(
+          filename = "proteinDomainsResults_SEA.csv",
+          content = function(filename) {
+            write.csv(proteinDomains.SEAtoSAVE, filename, row.names = T)
+          }
+        )
+        ## PLOTS ##
+        output$dotPlot.pDomains <- renderPlot({ clusterProfiler::dotplot(pDomains.SEA, showCategory=input$categNb_DP.D, ) + ggtitle("dotplot for GSEA") })
+        
         
         ########################################################
         ##########  Motifs  ##########

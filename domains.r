@@ -33,12 +33,12 @@ domains <- tabItem(tabName = "domains",
                    fluidRow(
                      column(width = 12,
                             box(collapsible = TRUE,
-                                  title = "Enrichment results - GSEA", status = "info", width = NULL,
+                                title = "Enrichment results - GSEA", status = "info", width = NULL,
                                 column(width = 10,
-                                  DT::dataTableOutput("Motif.GSEA.Table") %>% withSpinner(color = "#b6cca1")
+                                       DT::dataTableOutput("Motif.GSEA.Table") %>% withSpinner(color = "#b6cca1")
                                 ),
                                 column(width = 2,
-                                  downloadButton("dl.Motif", "Download")   
+                                       downloadButton("dl.Motif", "Download")   
                                 )
                             ),
                             box(collapsible = TRUE,
