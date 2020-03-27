@@ -48,7 +48,7 @@ Pathways - SEA & GSEA
 
 ```
 ```Dot plot
-![alt text](https://github.com/ShinyProject/projet/blob/master/Dot_Plot_SEA_Pathway.png?raw=true "dotplot_sea_pathway")
+![alt text](https://raw.githubusercontent.com/ShinyProject/projet/master/Dot_Plot_SEA_Pathway.png "dotplot_sea_pathway")
 
 	#Specifiy number of category
 
