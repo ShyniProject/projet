@@ -1,10 +1,9 @@
 pathways = tabItem(tabName = "pathways",
   h1("Pathways"),
-  
   h2("SEA"),
   ## pvalue
   sliderInput("pv.KEGG", label = h3("p-value threshold : "), min = 0, 
-    max = 0.1, value = 0.05),
+              max = 0.1, value = 0.05),
   fluidRow(
     column(width = 12,
            box(collapsible = TRUE,
@@ -45,20 +44,15 @@ pathways = tabItem(tabName = "pathways",
     column(width = 12,
       box(collapsible = TRUE,
         title = "Enrichment results - GSEA", status = "primary", width = NULL,
-        column(width = 10,
           DT::dataTableOutput("K.GSEA.Table") %>% withSpinner()
         ),
-        column(width = 2,
-          downloadButton("dl.KEGG", "Download")
-        )
-      ),
       box(collapsible = TRUE,
         title = "Dot plot - GSEA", status = "primary", width = NULL,
         column(width = 3,
           numericInput("categNb_DP", "Category number : ", 10, min = 1, max = 40, step = 5)
         ),
         column(width = 9,
-          plotOutput("dotPlot.KEGG") %>% withSpinner(type = 6)
+          plotlyOutput("dotPlot.KEGG") %>% withSpinner(type = 6)
           )
         ),     
     ),
