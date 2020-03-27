@@ -19,70 +19,89 @@ If you are a total beginner to this, start here!
 3. Choose a way to sign in
 4. Start writing note!
 
-User story
+Summary
 ---
 
-```gherkin=
-Feature: Guess the word
-
-  # The first example has two steps
-  Scenario: Maker starts a game
-    When the Maker starts a game
-    Then the Maker waits for a Breaker to join
-
-  # The second example has three steps
-  Scenario: Breaker joins a game
-    Given the Maker has started a game with the word "silky"
-    When the Breaker joins the Maker's game
-    Then the Breaker must guess a word with 5 characters
 ```
-> I choose a lazy person to do a hard job. Because a lazy person will find an easy way to do it. [name=Bill Gates]
+File Browse : csv file with header
+id Gene	baseMean log2FoldChange pvalue padj Biotype Orthologous_human_gene
+(photo)
 
-
-```gherkin=
-Feature: Shopping Cart
-  As a Shopper
-  I want to put items in my shopping cart
-  Because I want to manage items before I check out
-
-  Scenario: User adds item to cart
-    Given I'm a logged-in User
-    When I go to the Item page
-    And I click "Add item to cart"
-    Then the quantity of items in my cart should go up
-    And my subtotal should increment
-    And the warehouse inventory should decrement
+	#Respect header order
+	#Specifiy specie
 ```
 
-> Read more about Gherkin here: https://docs.cucumber.io/gherkin/reference/
+```
+Volcano Plot & MA plot
 
-User flows
+
+	#Two sliders to specify log(CPM)cetoff and padj on the plots
+	#clickable point on plots to show line af the corresponding point
+```
+
+Pathways - SEA & GSEA
 ---
-```sequence
-Alice->Bob: Hello Bob, how are you?
-Note right of Bob: Bob thinks
-Bob-->Alice: I am good thanks!
-Note left of Alice: Alice responds
-Alice->Bob: Where have you been?
+```Descriptive table
+(photo)
+	#Donwloadable 
+	#Clickable links
+
+```
+```Dot plot
+![alt text](https://github.com/ShinyProject/projet/blob/master/Dot_Plot_SEA_Pathway.png)
+
+	#Specifiy number of category
+
+```
+```Pathway Viewer
+(photo)
+	#drop-down list to choose pathway to see
+
+```
+```*GSEA only* Ridge plot
+(photo)
+	#Specifiy number of category
+
 ```
 
-> Read more about sequence-diagrams here: http://bramp.github.io/js-sequence-diagrams/
 
-Project Timeline
+Domains - SEA & GSEA
 ---
-```mermaid
-gantt
-    title A Gantt Diagram
+```Descriptive table
+(photo)
+	#Donwloadable 
+	#Clickable links
 
-    section Section
-    A task           :a1, 2014-01-01, 30d
-    Another task     :after a1  , 20d
-    section Another
-    Task in sec      :2014-01-12  , 12d
-    anther task      : 24d
+```
+```Dot plot with pathways significantly enriched as a function of the gene ratio (number of genes in the dataset differentially expressed on the number of genes that make up the pathway)
+(photo)
+	#Specifiy number of category
+
+```
+```Bonus with patterns for GSEA
+	#Descriptive table
+	#Dot plot
+	#Ridge plot
 ```
 
-> Read more about mermaid here: http://mermaid-js.github.io/mermaid/
+GO - SEA & GSEA
+---
+```Biological Process
+	#Histogram with corresponding descriptive table 
+	
+
+```
+```Cellular Component
+	#Histogram with corresponding descriptive table 
+	
+
+```
+```Molecular fonction
+	#Histogram with corresponding descriptive table 
+	
+
+```
+
 
 ## Appendix and FAQ
 
@@ -90,4 +109,4 @@ gantt
 **Find this document incomplete?** Leave a comment!
 :::
 
-###### tags: `Templates` `Documentation`
+
