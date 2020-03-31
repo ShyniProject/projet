@@ -10,15 +10,6 @@ Shiny Project
 
 [TOC]
 
-## Beginners Guide
-
-If you are a total beginner to this, start here!
-
-1. Visit hackmd.io
-2. Click "Sign in"
-3. Choose a way to sign in
-4. Start writing note!
-
 Summary
 ---
 
@@ -41,72 +32,85 @@ Volcano Plot & MA plot
 
 Pathways - SEA & GSEA
 ---
-```Descriptive table
-(photo)
-	#Donwloadable 
-	#Clickable links
+```Descriptive table of data
 
-```
-```Dot plot
-![alt text](https://raw.githubusercontent.com/ShinyProject/projet/master/Dot_Plot_SEA_Pathway.png "dotplot_sea_pathway")
-
-	#Specifiy number of category
-
-```
-```Pathway Viewer
-(photo)
-	#drop-down list to choose pathway to see
-
-```
-```*GSEA only* Ridge plot
-(photo)
-	#Specifiy number of category
-
-```
-
-
-Domains - SEA & GSEA
----
-```Descriptive table
-(photo)
 	#Donwloadable 
 	#Clickable links
 
 ```
 ```Dot plot with pathways significantly enriched as a function of the gene ratio (number of genes in the dataset differentially expressed on the number of genes that make up the pathway)
-(photo)
+	#Specifiy number of category
+```
+![](./Dot_Plot_SEA_Pathway.png)
+![](./Dot_Plot_GSEA_Pathway.png)
+
+```Pathway Viewer
+	#drop-down list to choose pathway to see
+
+```
+```*GSEA only* Ridge plot
 	#Specifiy number of category
 
 ```
+![](./Ridge_Plot_GSEA_Pathway.png)
+
+
+
+Domains - SEA & GSEA
+---
+```Descriptive table
+
+	#Donwloadable 
+	#Clickable links
+
+```
+
+```Dot plot with domains significantly enriched as a function of the gene ratio (number of genes in the dataset differentially expressed on the number of genes that make up the pathway)
+
+	#Specifiy number of category
+
+```
+![](./Dot_Plot_SEA_Domain.png)
+
 ```Bonus with patterns for GSEA
 	#Descriptive table
 	#Dot plot
 	#Ridge plot
 ```
+![](./Dot_Plot_GSEA_Motif.png)
+![](./Ridge_Plot_GSEA_Motif.png)
 
-GO - SEA & GSEA
+GO 
 ---
-```Biological Process
-	#Histogram with corresponding descriptive table 
-	
-
+```Representation of main differentially expressed Biological Processes
+	# SEA Histogram with corresponding descriptive table 
+	# GSEA Barplot with correspondong descriptive table 
 ```
-```Cellular Component
-	#Histogram with corresponding descriptive table 
-	
+![](./Hist_Biological_Process_SEA.png)
 
+![](./Barplot_Biological_Process_GSEA.png)
+
+
+```Representation of main differentially expressed Cellular Component
+	# SEA Histogram with corresponding descriptive table 
+	# GSEA Barplot with correspondong descriptive table
 ```
-```Molecular fonction
-	#Histogram with corresponding descriptive table 
-	
+![](./Hist_Cellular_Components_SEA.png)
 
+![](./Barplot_Cellular_Components_GSEA.png)
+
+
+``` Representation of main differentially expressed Molecular fonction
+	# SEA Histogram with corresponding descriptive table 
+	# GSEA Barplot with correspondong descriptive table
 ```
+![](./Hist_Molecular_Function_SEA.png)
 
+![](./Barplot_Molecular_Function_GSEA.png)
 
 ## Appendix and FAQ
 
 :::info
 **Find this document incomplete?** Leave a comment!
 :::
-
 
