@@ -14,16 +14,16 @@ Summary
 ---
 
 ```
-File Browse : csv file with header
+*File Browse : csv file with header*
 id Gene	baseMean log2FoldChange pvalue padj Biotype Orthologous_human_gene
-(photo)
+
 
 	#Respect header order
 	#Specifiy specie
 ```
 
 ```
-Volcano Plot & MA plot
+*Volcano Plot & MA plot*
 
 
 	#Two sliders to specify log(CPM)cetoff and padj on the plots
@@ -32,23 +32,27 @@ Volcano Plot & MA plot
 
 Pathways - SEA & GSEA
 ---
-```Descriptive table of data
+```
+*Descriptive table of data*
 
 	#Donwloadable 
 	#Clickable links
 
 ```
-```Dot plot with pathways significantly enriched as a function of the gene ratio (number of genes in the dataset differentially expressed on the number of genes that make up the pathway)
+```
+*Dot plot with pathways significantly enriched as a function of the gene ratio (number of genes in the dataset differentially expressed on the number of genes that make up the pathway)*
 	#Specifiy number of category
 ```
 ![](./Dot_Plot_SEA_Pathway.png)
 ![](./Dot_Plot_GSEA_Pathway.png)
 
-```Pathway Viewer
+```
+*Pathway Viewer*
 	#drop-down list to choose pathway to see
 
 ```
-```*GSEA only* Ridge plot
+```
+*GSEA only Ridge plot*
 	#Specifiy number of category
 
 ```
@@ -58,21 +62,25 @@ Pathways - SEA & GSEA
 
 Domains - SEA & GSEA
 ---
-```Descriptive table
+```
+*Descriptive table*
 
 	#Donwloadable 
 	#Clickable links
 
 ```
 
-```Dot plot with domains significantly enriched as a function of the gene ratio (number of genes in the dataset differentially expressed on the number of genes that make up the pathway)
+```
+*Dot plot with domains significantly enriched as a function of the gene ratio (number of genes in the dataset differentially expressed on the number of genes that make up the pathway)*
 
 	#Specifiy number of category
 
 ```
 ![](./Dot_Plot_SEA_Domain.png)
 
-```Bonus with patterns for GSEA
+```
+*Bonus with patterns for GSEA*
+
 	#Descriptive table
 	#Dot plot
 	#Ridge plot
@@ -82,7 +90,8 @@ Domains - SEA & GSEA
 
 GO 
 ---
-```Representation of main differentially expressed Biological Processes
+```
+*Representation of main differentially expressed Biological Processes*
 	# SEA Histogram with corresponding descriptive table 
 	# GSEA Barplot with correspondong descriptive table 
 ```
@@ -91,7 +100,8 @@ GO
 ![](./Barplot_Biological_Process_GSEA.png)
 
 
-```Representation of main differentially expressed Cellular Component
+```
+*Representation of main differentially expressed Cellular Component*
 	# SEA Histogram with corresponding descriptive table 
 	# GSEA Barplot with correspondong descriptive table
 ```
@@ -100,7 +110,8 @@ GO
 ![](./Barplot_Cellular_Components_GSEA.png)
 
 
-``` Representation of main differentially expressed Molecular fonction
+``` 
+*Representation of main differentially expressed Molecular fonction*
 	# SEA Histogram with corresponding descriptive table 
 	# GSEA Barplot with correspondong descriptive table
 ```
