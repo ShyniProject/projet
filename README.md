@@ -42,8 +42,8 @@ Pathways - SEA & GSEA
 *Dot plot with pathways significantly enriched as a function of the gene ratio (number of genes in the dataset differentially expressed on the number of genes that make up the pathway)*
 	#Specifiy number of category
 
-![](./Dot_Plot_SEA_Pathway.png)
-![](./Dot_Plot_GSEA_Pathway.png)
+![](./Images/Dot_Plot_SEA_Pathway.png)
+![](./Images/Dot_Plot_GSEA_Pathway.png)
 
 
 *Pathway Viewer*
@@ -54,7 +54,7 @@ Pathways - SEA & GSEA
 	#Specifiy number of category
 
 
-![](./Ridge_Plot_GSEA_Pathway.png)
+![](./Images/Ridge_Plot_GSEA_Pathway.png)
 
 
 
@@ -71,7 +71,7 @@ Domains - SEA & GSEA
 	#Specifiy number of category
 
 
-![](./Dot_Plot_SEA_Domain.png)
+![](./Images/Dot_Plot_SEA_Domain.png)
 
 
 *Bonus with patterns for GSEA*
@@ -80,8 +80,8 @@ Domains - SEA & GSEA
 	#Dot plot
 	#Ridge plot
 
-![](./Dot_Plot_GSEA_Motif.png)
-![](./Ridge_Plot_GSEA_Motif.png)
+![](./Images/Dot_Plot_GSEA_Motif.png)
+![](./Images/Ridge_Plot_GSEA_Motif.png)
 
 GO 
 ---
@@ -90,9 +90,9 @@ GO
 	# SEA Histogram with corresponding descriptive table 
 	# GSEA Barplot with correspondong descriptive table 
 
-![](./Hist_Biological_Process_SEA.png)
+![](./Images/Hist_Biological_Process_SEA.png)
 
-![](./Barplot_Biological_Process_GSEA.png)
+![](./Images/Barplot_Biological_Process_GSEA.png)
 
 
 
@@ -100,9 +100,9 @@ GO
 	# SEA Histogram with corresponding descriptive table 
 	# GSEA Barplot with correspondong descriptive table
 
-![](./Hist_Cellular_Components_SEA.png)
+![](./Images/Hist_Cellular_Components_SEA.png)
 
-![](./Barplot_Cellular_Components_GSEA.png)
+![](./Images/Barplot_Cellular_Components_GSEA.png)
 
 
 
@@ -110,9 +110,9 @@ GO
 	# SEA Histogram with corresponding descriptive table 
 	# GSEA Barplot with correspondong descriptive table
 
-![](./Hist_Molecular_Function_SEA.png)
+![](./Images/Hist_Molecular_Function_SEA.png)
 
-![](./Barplot_Molecular_Function_GSEA.png)
+![](./Images/Barplot_Molecular_Function_GSEA.png)
 
 ## Appendix and FAQ
 
