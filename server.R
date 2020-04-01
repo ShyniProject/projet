@@ -41,13 +41,61 @@ function(input, output, session) {
       ########################################################
       
       ### SEA ###
-        ## ANALYSIS ##
+      ## ANALYSIS ##
       withProgress(message = 'SEA ... ', value = 0, {
         
-        ################### A FAIRE #################
-        
-      })
+        gene = pvalues[pvalues<0.05]
+        Kegg.SEA = enrichKEGG(gene = names(gene),
+                              organism     = 'dre',
+                              pvalueCutoff = 0.05)
+        observe({SEA()})
+        SEA <- eventReactive(input$pv.KEGG,{
+          gene = pvalues[pvalues<input$pv.KEGG]
+          Kegg.SEA = enrichKEGG(gene = names(gene),
+                                organism     = 'dre',
+                                pvalueCutoff = input$pv.KEGG)
+        ## TABLE ##
+        incProgress(2/5, detail = "dynamic results table...")    
+        K.SEA_description = dplyr::select(Kegg.SEA@result, ID, Description)
+        K.SEA_description$ID = paste0("<a href=https://www.kegg.jp/kegg-bin/show_pathway?", K.SEA_description$ID," target='_blank'>",K.SEA_description$ID,"</a>")
+        K.SEA_value = dplyr::select(Kegg.SEA@result, everything(), -ID, -Description , -GeneRatio, -geneID,-BgRatio) %>% round(4)
+        K.SEA = cbind(K.SEA_description, K.SEA_value)
+        K.SEAtoSAVE = dplyr::select(K.SEA, everything(), -ID)
+        output$K.SEA.Table = DT::renderDataTable({
+          K.SEA
+        }, escape = F) # escape FALSE to make url
+        output$dl.KEGG_SEA <- downloadHandler(
+          filename = "KEGGResults_SEA.csv",
+          content = function(filename) {
+            write.csv(K.SEAtoSAVE, filename, row.names = T)
+          }
+        )
         ## PLOTS ##
+        incProgress(4/5, detail = "Enrichment dot plot...")
+        output$dotPlot.KEGG_SEA <- renderPlot({ clusterProfiler::dotplot(Kegg.SEA, showCategory=input$categNb_DP_SEAK) + ggtitle("dotplot for SEA") })
+        
+        ## PATHVIEW - SEA##
+        incProgress(5/5, detail = "Pathway map afterSEA visualization...")
+        #selectBox's update with pathway ids
+        input$pathwayChoice_SEA
+        updateSelectInput(session, "pathwayChoice_SEA", choices = row.names(K.SEA_description), selected = NULL)
+        
+        observe({
+          if (input$pathwayChoice_SEA != "")
+          {
+            output$pathwayViewer_SEA <- renderImage({
+              pathPNG <- pathview(gene.data  = gene,
+                                  pathway.id = input$pathwayChoice_SEA,
+                                  species = "dre")
+              
+              list(src = paste0(input$pathwayChoice_SEA, ".pathview.png"),
+                   contentType = 'image/png',
+                   width = session$clientData$output_pathwayViewer_width*session$clientData$pixelratio*0.7,
+                   height = session$clientData$output_pathwayViewer_height*session$clientData$pixelratio
+              )
+              
+            })}})
+      })})
       
       ### GSEA ###
         ## ANALYSIS
@@ -103,6 +151,43 @@ function(input, output, session) {
 
         })}})
       }) # GSEA progress bar end
+        ########################################################
+        ##########  Protein Domains  ##########
+        ########################################################
+        ## Protein domains DATA
+        
+        pDomains = read.csv("mart_export_INTERPRO.txt") 
+        pD.TERM2GENE = dplyr::select(pDomains, Interpro.ID, Gene.stable.ID)
+        pD.TERM2GENE$Gene.stable.ID <- mapIds(org.Dr.eg.db, as.vector(pD.TERM2GENE$Gene.stable.ID), 'ENTREZID', 'ENSEMBL')
+        # pD.TERM2NAME = unique(pDomains$Interpro.Description) ; names(pD.TERM2NAME) = unique(pDomains$Interpro.ID)
+        pD.TERM2NAME = dplyr::select(pDomains, Interpro.ID, Interpro.Description)
+        
+        gene = pvalues[pvalues<0.05]
+        
+        ## ANALYSIS ##
+        pDomains.SEA = enricher(names(gene), TERM2GENE = pD.TERM2GENE, TERM2NAME = pD.TERM2NAME)
+        
+        ## TABLE ## 
+        proteinDomains.SEA_description = dplyr::select(pDomains.SEA@result, ID, Description)
+        proteinDomains.SEA_description$ID = paste0("<a href=https://www.ebi.ac.uk/interpro/entry/InterPro/IPR001064/", 
+                                                   proteinDomains.SEA_description$ID," target='_blank'>",proteinDomains.SEA_description$ID,"</a>")
+        proteinDomains.SEA_value = dplyr::select(pDomains.SEA@result, everything(), -ID, -Description , -GeneRatio, -geneID,-BgRatio) %>% round(4)
+        proteinDomains.SEA = cbind(proteinDomains.SEA_description, proteinDomains.SEA_value)
+        proteinDomains.SEAtoSAVE = dplyr::select(proteinDomains.SEA, everything(), -ID)
+        
+        output$proteinDomains.SEA.Table = DT::renderDataTable({
+          proteinDomains.SEA
+        }, escape = F) # escape FALSE to make url
+        
+        output$dl.pDomains <- downloadHandler(
+          filename = "proteinDomainsResults_SEA.csv",
+          content = function(filename) {
+            write.csv(proteinDomains.SEAtoSAVE, filename, row.names = T)
+          }
+        )
+        ## PLOTS ##
+        output$dotPlot.pDomains <- renderPlot({ clusterProfiler::dotplot(pDomains.SEA, showCategory=input$categNb_DP.D, ) + ggtitle("dotplot for SEA") })
+        
         
         ########################################################
         ##########  Motifs  ##########
@@ -146,39 +231,57 @@ function(input, output, session) {
         source(file = "Go_Term.R")
         source(file = "MA_Volcano_plot.R")
         
-        
+        withProgress(message = 'Volcano & MA Plots ... ', value = 0, {
         dataFiltered <- data.filtering(input =  d,
                          logFcCut = input$logFcCut,
                          padjCut = input$padjCut) # Filtre et travail sur les données 
         
+        incProgress(2/3, detail = "Volcano Plot...")
+        
         output$volcanoPlot <- renderPlot({ 
           VolcanoPlot(dataFiltered)
         })
+        
+        observe({clickVolc()})
+        clickVolc <- eventReactive(input$plot_click.Volcano,{
+          
+        
         clicked.Volcano <-  nearPoints(dataFiltered, input$plot_click.Volcano, xvar = "log2FoldChange", yvar = "negLogpadj")
+        print(clicked.Volcano)
          #Prend en compte un nombre de point proche du pointeur 
         
         output$clickedPoints.Volcano <- renderTable({
           clicked.Volcano
-        }, rownames = T)
+        }, rownames = T)})
         
+        incProgress(3/3, detail = "MA Plot...")
         output$maPlot <- renderPlot({
           MaPlot(dataFiltered)
         })
+        
+        
+        observe({clickMA()})
+        clickMA <- eventReactive(input$plot_click.MA,{
         clicked.MA <- nearPoints(dataFiltered, input$plot_click.MA, xvar = "logBaseMean", yvar = "log2FoldChange")
         
         #output those points into a table
         output$clickedPoints.MA <- renderTable({clicked.MA}, rownames = T)
         
+        })})
         
         ########################################################
         ##########                GO                  ##########
         ########################################################
-        
+        withProgress(message = 'GO ... ', value = 0, {
         dataFilteredGO <-  DataFilterGO(d)
         
         ########################## GO SEA #######################################
-        
+        incProgress(2/5, detail = "SEA analysis...")
         SEA_result <- SEAanalysis(dataFilteredGO)
+        
+        #### Plots ####
+        
+        incProgress(3/5, detail = "SEA plots...")
         
         output$SEA_bp <- renderPlot({bp_SEA_Plot(SEA_result)})
         
@@ -194,8 +297,14 @@ function(input, output, session) {
         ########################## GO GSEA #######################################
         
         
-        
+        incProgress(4/5, detail = "GSEA analysis...")
         GSEA_result <- GSEAanalysis(dataFilteredGO)
+        
+        
+        #### Plots ####
+        
+        incProgress(5/5, detail = "GSEA Plots...")
+        
         
         output$GSEA_bp <- renderPlot({
           bp_GSEA_Plot(GSEA_result)
@@ -210,6 +319,7 @@ function(input, output, session) {
         })
         
         })
+  })
   
   
         
