@@ -7,6 +7,23 @@ function(input, output, session) {
   analysis <- eventReactive(input$data,{
       
       ########################################################
+      ##########  data type check  ##########
+      ########################################################
+      formats = c(
+        'text/csv',
+        'text/comma-separated-values',
+        'text/tab-separated-values',
+        'text/plain',
+        'csv',
+        'tsv'
+      )
+
+      if(!input$data$type %in% formats)
+      {
+        shinyalert("Oops!", paste0("It seems you have upload a ",input$data$type," file \n Please refresh page."), type = "warning", animation = T)
+      }   
+    
+      ########################################################
       ##########  data preprocesses  ##########
       ########################################################
       ## RNAseq data ##
