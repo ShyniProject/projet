@@ -1,6 +1,7 @@
 library(shiny)
 library(shinydashboard)
 library(shinycssloaders)
+library(shinyalert) # for file format checking
 library(ggplot2)
 library(plotly) # to make dynamic ggplots
 library(DT) ## datatable results
