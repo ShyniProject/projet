@@ -21,7 +21,7 @@ function(input, output, session) {
     
     if(!input$data$type %in% formats)
     {
-      shinyalert("Oops!", paste0("It seems you have upload a ",input$data$type," file \n Please refresh page."), type = "warning", animation = T)
+      shinyalert("Oops!", paste0("It seems you have uploaded a ",input$data$type," file \n Please refresh page."), type = "warning", animation = T)
     } 
     
     
