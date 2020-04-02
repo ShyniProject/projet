@@ -1,6 +1,6 @@
 domains <- tabItem(tabName = "domains",
-                   h2("Domains"),
-                   h3("SEA"),
+                   h1("Domains"),
+                   h2("SEA"),
                    sliderInput("pv.DomainsSEA", label = h3("p-value threshold : "), min = 0, 
                                max = 0.1, value = 0.05),
                    fluidRow(
@@ -28,8 +28,8 @@ domains <- tabItem(tabName = "domains",
                    
                    
                    
-                   h2("Motifs"),
-                   h3("GSEA"),
+                   h1("Motifs"),
+                   h2("GSEA"),
                    fluidRow(
                      column(width = 12,
                             box(collapsible = TRUE,
