@@ -6,7 +6,7 @@ domains <- tabItem(tabName = "domains",
                    fluidRow(
                      column(width = 12,
                             box(collapsible = TRUE,
-                                title = "Enrichment results - SEA", status = "info", width = NULL,
+                                title =  span(icon("th-list"),"Enrichment results - GSEA"), status = "info", width = NULL,
                                 column(width = 10,
                                        DT::dataTableOutput("proteinDomains.SEA.Table") %>% withSpinner(color = "#b68f40")
                                 ),
@@ -15,7 +15,7 @@ domains <- tabItem(tabName = "domains",
                                 )
                             ),
                             box(collapsible = TRUE,
-                                title = "Dot plot - SEA", status = "info", width = NULL,
+                                title = span(icon("sort-amount-up"), "Dot plot - GSEA"), status = "info", width = NULL,
                                 column(width = 3,
                                        numericInput("categNb_DP.D", "Category number : ", 10, min = 1, max = 40, step = 5)
                                 ),
@@ -33,7 +33,7 @@ domains <- tabItem(tabName = "domains",
                    fluidRow(
                      column(width = 12,
                             box(collapsible = TRUE,
-                                title = "Enrichment results - GSEA", status = "info", width = NULL,
+                                title =  span(icon("th-list"),"Enrichment results - GSEA"), status = "info", width = NULL,
                                 column(width = 10,
                                        DT::dataTableOutput("Motif.GSEA.Table") %>% withSpinner(color = "#b6cca1")
                                 ),
@@ -42,7 +42,7 @@ domains <- tabItem(tabName = "domains",
                                 )
                             ),
                             box(collapsible = TRUE,
-                                title = "Dot plot - GSEA", status = "info", width = NULL,
+                                title = span(icon("sort-amount-up"), "Dot plot - GSEA"), status = "info", width = NULL,
                                 column(width = 3,
                                        numericInput("categNb_DP.M", "Category number : ", 10, min = 1, max = 40, step = 5)
                                 ),
@@ -53,7 +53,7 @@ domains <- tabItem(tabName = "domains",
                      ),
                      column(width = 12,
                             box(collapsible = TRUE,
-                                title = "Ridge plot - GSEA", status = "info",width = NULL,
+                                title = span(icon("sort-amount-up"), "Ridge plot - GSEA"), status = "info",width = NULL,
                                 column(width = 2,
                                        numericInput("categNb_RP.M", "Category number : ", 10, min = 1, max = 40, step = 5)
                                 ),

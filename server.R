@@ -84,6 +84,8 @@ function(input, output, session) {
         output$K.SEA.Table = DT::renderDataTable({
           K.SEA
         }, escape = F) # escape FALSE to make url
+        
+        ## DOWNLOAD
         output$dl.KEGG_SEA <- downloadHandler(
           filename = "KEGGResults_SEA.csv",
           content = function(filename) {
@@ -143,7 +145,7 @@ function(input, output, session) {
       
       ## PLOTS ##
       incProgress(3/5, detail = "Enrichment dot plot...")
-      output$dotPlot.KEGG <- renderPlotly({ dotplot(Kegg.GSEA, showCategory=input$categNb_DP) + ggtitle("dotplot for GSEA") })
+      output$dotPlot.KEGG <- renderPlot({ dotplot(Kegg.GSEA, showCategory=input$categNb_DP) + ggtitle("dotplot for GSEA") })
       incProgress(4/5, detail = "Enrichment ridge plot...")
       output$ridgePlot.kegg <- renderPlot({ ridgeplot(Kegg.GSEA, showCategory=input$categNb_RP) })
       
@@ -226,7 +228,7 @@ function(input, output, session) {
     ## ANALYSIS ##
     withProgress(message = 'GSEA ... ', value = 0, {
       motifs.GSEA <- GSEA(logF, TERM2GENE=motif.TERM2GENE, pvalueCutoff = 0.15, nPerm = 10000, pAdjustMethod = "BH")
-      head(motifs.GSEA@result$ID) # 0
+      head(motifs.GSEA@result$ID) 
       
       ## TABLE ##
       Motif.GSEA_description = dplyr::select(motifs.GSEA@result, ID, Description)
@@ -247,8 +249,6 @@ function(input, output, session) {
     ########################################################
     ##########        Volcano & MA plots          ##########
     ########################################################
-    
-    source(file = "Go_Term.R")
     source(file = "MA_Volcano_plot.R")
     
     withProgress(message = 'Volcano & MA Plots ... ', value = 0, {
@@ -295,6 +295,8 @@ function(input, output, session) {
     ########################################################
     ##########                GO                  ##########
     ########################################################
+    source(file = "GO_term.R")
+    
     withProgress(message = 'GO ... ', value = 0, {
       dataFilteredGO <-  DataFilterGO(d)
       
@@ -302,9 +304,8 @@ function(input, output, session) {
       incProgress(2/5, detail = "SEA analysis...")
       observe({SEA_GO()})
       SEA_GO <- eventReactive(input$pv.GO,{
-        SEA_result <- SEAanalysis(dataFilteredGO,input$pv.GO)
+      SEA_result <- SEAanalysis(dataFilteredGO,input$pv.GO)
       #### Plots ####
-      
       incProgress(3/5, detail = "SEA plots...")
       
       output$SEA_bp <- renderPlot({bp_SEA_Plot(SEA_result)})
@@ -317,7 +318,55 @@ function(input, output, session) {
       output$SEA_cc <- renderPlot({
         cc_SEA_Plot(SEA_result)
       })
-      })
+      
+      # cats <- c("BP", "CC", "MF")
+      ## BP TABLE ##
+      GO_BP.SEA_description = SEA_result$BP
+      GO_BP.SEA_description$GO_term= paste0("<a href=http://amigo.geneontology.org/amigo/term/", GO_BP.SEA_description$GO_term," target='_blank'>",GO_BP.SEA_description$GO_term, "</a>")
+      GO_BP.SEA_description$pval = GO_BP.SEA_description$pval %>% round(3)
+      output$GO_BP.SEA.Table = DT::renderDataTable({
+        GO_BP.SEA_description
+      }, escape = F) # escape FALSE t
+      ## DOWNLOAD
+      output$dl.SEAGO_BP <- downloadHandler(
+        filename = "SEA_GO_BP.csv",
+        content = function(filename) {
+          write.csv(GO_BP.SEA_description, filename, row.names = T)
+        }
+      )
+      ## CC TABLE ##
+      GO_CC.SEA_description = SEA_result$CC
+      GO_CC.SEA_description$GO_term= paste0("<a href=http://amigo.geneontology.org/amigo/term/", GO_CC.SEA_description$GO_term," target='_blank'>",GO_CC.SEA_description$GO_term, "</a>")
+      GO_CC.SEA_description$pval = GO_CC.SEA_description$pval %>% round(3)
+      output$GO_CC.SEA.Table = DT::renderDataTable({
+        GO_CC.SEA_description
+      }, escape = F) # escape FALSE t   
+      ## DOWNLOAD
+      output$dl.SEAGO_CC <- downloadHandler(
+        filename = "SEA_GO_CC.csv",
+        content = function(filename) {
+          write.csv(GO_CC.SEA_description, filename, row.names = T)
+        }
+      )
+      ## MF TABLE ##
+      GO_MF.SEA_description = SEA_result[[1]]
+      GO_MF.SEA_description$GO_term= paste0("<a href=http://amigo.geneontology.org/amigo/term/", GO_MF.SEA_description$GO_term," target='_blank'>",GO_MF.SEA_description$GO_term, "</a>")
+      GO_MF.SEA_description$pval = GO_MF.SEA_description$pval %>% round(3)
+      
+      output$GO_MF.SEA.Table = DT::renderDataTable({
+        GO_MF.SEA_description
+      }, escape = F) # escape FALSE to make url
+      
+      ## DOWNLOAD
+      output$dl.SEAGO_MF <- downloadHandler(
+        filename = "SEA_GO_MF.csv",
+        content = function(filename) {
+          write.csv(GO_MF.SEA_description, filename, row.names = T)
+        }
+      )
+  }) # end GO reactive
+      
+
       
       ########################## GO GSEA #######################################
       
@@ -327,9 +376,7 @@ function(input, output, session) {
       
       
       #### Plots ####
-      
       incProgress(5/5, detail = "GSEA Plots...")
-      
       
       output$GSEA_bp <- renderPlot({
         bp_GSEA_Plot(GSEA_result)
@@ -343,9 +390,63 @@ function(input, output, session) {
         cc_GSEA_Plot(GSEA_result)
       })
       
-    })
+      ## TABLE - Biological Processes ##
+      GO.GSEA_description = GSEA_result[["BP"]]@result
+      GO.GSEA_description = dplyr::select(GSEA_result[["BP"]]@result, ID, Description)
+      GO.GSEA_description$ID = paste0("<a href=http://amigo.geneontology.org/amigo/term/", GO.GSEA_description$ID," target='_blank'>",GO.GSEA_description$ID,"</a>")
+      GO.GSEA_value = dplyr::select(GSEA_result[["BP"]]@result, setSize:p.adjust, -NES) %>% round(3)
+      GO.GSEA = cbind(GO.GSEA_description, GO.GSEA_value)
+
+      output$GO_BP.GSEA.Table = DT::renderDataTable({
+        GO.GSEA
+      }, escape = F) # escape FALSE to make url
+      
+      ## DOWNLOAD
+      output$dl.GSEAGO_BP <- downloadHandler(
+        filename = "GSEA_GO_BP.csv",
+        content = function(filename) {
+          write.csv(GSEA_result[["BP"]]@resul, filename, row.names = T)
+        }
+    )
+      
+      ## TABLE - Molecular Functions ##
+      GO.GSEA_description = GSEA_result[["MF"]]@result
+      GO.GSEA_description = dplyr::select(GSEA_result[["MF"]]@result, ID, Description)
+      GO.GSEA_description$ID = paste0("<a href=http://amigo.geneontology.org/amigo/term/", GO.GSEA_description$ID," target='_blank'>",GO.GSEA_description$ID,"</a>")
+      GO.GSEA_value = dplyr::select(GSEA_result[["MF"]]@result, setSize:p.adjust, -NES) %>% round(3)
+      GO.GSEA = cbind(GO.GSEA_description, GO.GSEA_value)
+
+      output$GO_MF.GSEA.Table = DT::renderDataTable({
+        GO.GSEA
+      }, escape = F) # escape FALSE to make url
+      
+      ## DOWNLOAD
+      output$dl.GSEAGO_MF <- downloadHandler(
+        filename = "GSEA_GO_MF.csv",
+        content = function(filename) {
+          write.csv(GSEA_result[["MF"]]@resul, filename, row.names = T)
+        }
+    )
+      
+      ## TABLE - Cellular Components ##
+      GO.GSEA_description = GSEA_result[["CC"]]@result
+      GO.GSEA_description = dplyr::select(GSEA_result[["CC"]]@result, ID, Description)
+      GO.GSEA_description$ID = paste0("<a href=http://amigo.geneontology.org/amigo/term/", GO.GSEA_description$ID," target='_blank'>",GO.GSEA_description$ID,"</a>")
+      GO.GSEA_value = dplyr::select(GSEA_result[["CC"]]@result, setSize:p.adjust, -NES) %>% round(3)
+      GO.GSEA = cbind(GO.GSEA_description, GO.GSEA_value)
+
+      output$GO_CC.GSEA.Table = DT::renderDataTable({
+        GO.GSEA
+      }, escape = F) # escape FALSE to make url
+      
+      ## DOWNLOAD
+      output$dl.GSEAGO_CC <- downloadHandler(
+        filename = "GSEA_GO_CC.csv",
+        content = function(filename) {
+          write.csv(GSEA_result[["CC"]]@resul, filename, row.names = T)
+        }
+    )
+      
   })
-  
-  
-  
-}
+  } 
+)}
