@@ -1,5 +1,6 @@
 library(shiny)
 library(shinydashboard)
+library(shinydashboardPlus)
 library(shinycssloaders)
 library(shinyalert)# for file format checking
 library(ggplot2)
@@ -21,15 +22,15 @@ source("pathways.r")
 source("domains.r")
 source("GO_item.R")
 
-
 dashboardPage(
     dashboardHeader(title = "EASE"),
     dashboardSidebar(
         sidebarMenu(
-            menuItem("Summary", tabName = "summary"),
-            menuItem("Pathways", tabName = "pathways", icon = icon("poll")),
-            menuItem("Domains", tabName = "domains"),
-            menuItem("GO", tabName = "GO"))
+            menuItem("Whole data inspection", tabName = "summary", icon = icon("poll")),
+            menuItem("Pathways", tabName = "pathways", icon = icon("project-diagram")),
+            menuItem("GO terms", tabName = "GO", icon = icon("sitemap")),
+            menuItem("Protein Domains", tabName = "domains", icon = icon("bullseye")))
+        
         
     ),
     dashboardBody(

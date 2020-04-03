@@ -1,23 +1,41 @@
 # Read data
 summary = tabItem(tabName = "summary",
                   
-                  h1("Put your csv file"),
                   
-                  ## FILE INPUT
-                  fileInput("data", label = NULL,
-                            buttonLabel = "Browse...",
-                            placeholder = "No file selected",
-                            accept = c('text/csv',
-                                       'text/comma-separated-values',
-                                       'text/tab-separated-values',
-                                       'text/plain',
-                                       '.csv',
-                                       '.tsv')),
-                  useShinyalert(), #if data type not supported only
+                fluidRow(
+                  widgetUserBox(
+                    title = strong("Enrichment Analysis in Shiny Environment"),
+                    subtitle = strong("EASE"),
+                    type = NULL,
+                    src = "https://www.flaticon.com/premium-icon/icons/svg/1882/1882123.svg",
+                    color = "yellow",
+                    # background = TRUE,
+                    # backgroundUrl = "https://image.flaticon.com/icons/svg/307/307757.svg",
+                    closable = F,
+                    fluidRow(column(width = 12, align = "center", 
+                      h2("Welcome to our enrichment analysis shiny application for RNA-seq data !"),
+                      h1("Put your .csv file\n"),
+                      em("csv or text/csv files only with \"id\" for ENSEMBL genes ID, \"padj\" for p-values adjusted and \"log2FoldChange\" columns.\n\n"),
+                      ## FILE INPUT
+                      column(width = 7, align = "center",offset = 2,
+                          fileInput("data", label = NULL,
+                              buttonLabel = "Browse...",
+                              placeholder = "No file selected",
+                              accept = c('text/csv',
+                                         'text/comma-separated-values',
+                                         'text/tab-separated-values',
+                                         'text/plain',
+                                         '.csv',
+                                         '.tsv'))))),
+                    useShinyalert(), #if data type not supported only
+                    footer = NULL,
+                    footer_padding = F,
+                    width = 12
+                  )),
                   
-                  h1("Summary"),
+                  h1("Whole data inspection"),
                   fluidRow(
-                    column(6,sliderInput('logFcCut', label="log(CPM) cutoff",0,10,2, width="200px")), # Sélection du seuil pour le foldchange
+                    column(6,sliderInput('logFcCut', label="log(CPM) cutoff",0,10,2, width="200px")), # S?lection du seuil pour le foldchange
                     column(6,sliderInput('padjCut', label="padj cutoff",0,1,0.05, width="200px")),), 
                   fluidRow(
                     column(width = 12,
