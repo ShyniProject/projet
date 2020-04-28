@@ -1,7 +1,6 @@
 # Read data
 summary = tabItem(tabName = "summary",
                   
-                  
                 fluidRow(
                   widgetUserBox(
                     title = strong("Enrichment Analysis in Shiny Environment"),
@@ -33,6 +32,8 @@ summary = tabItem(tabName = "summary",
                     width = 12
                   )),
                   
+                selectInput("organismDb","Organism:", choices = NULL, selected = NULL),
+                
                   h1("Whole data inspection"),
                   fluidRow(
                     column(6,sliderInput('logFcCut', label="log(CPM) cutoff",0,10,2, width="200px")), # S?lection du seuil pour le foldchange
