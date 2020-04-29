@@ -14,6 +14,9 @@ DataFilterGO <- function(dat){
 
 # OPTIONAL: to update GO data
 Update_Go_data <- function(){
+  mart <- useEnsembl(biomart = 'ensembl', 
+                     dataset = 'drerio_gene_ensembl',
+                     mirror = 'asia')
   mapping_Ensembl_Entrez <- getBM(attributes = c("ensembl_gene_id", "entrezgene_id"), mart = mart)
   write.table(mapping_Ensembl_Entrez, "EnsemblToEntrez_Drerio.txt")
 }
@@ -60,7 +63,10 @@ cc_SEA_Plot=function(ORA_dfs){
 #GSEA
 
 GSEAanalysis <- function(dat){
-  mart <- useMart("ENSEMBL_MART_ENSEMBL", dataset = "drerio_gene_ensembl")
+  # mart <- useMart("ENSEMBL_MART_ENSEMBL", dataset = "drerio_gene_ensembl")
+  mart <- useEnsembl(biomart = 'ensembl', 
+                     dataset = 'drerio_gene_ensembl',
+                     mirror = 'asia')
   mapping_Ensembl_Entrez <- read.table("EnsemblToEntrez_Drerio.txt")
   mapping_Ensembl_Entrez <- mapping_Ensembl_Entrez %>% filter(ensembl_gene_id %in% dat$id & 
                                                                 !is.na(entrezgene_id) & 
