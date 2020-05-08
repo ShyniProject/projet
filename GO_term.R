@@ -1,40 +1,21 @@
-library(dplyr)
-library(tidyr)
-library(biomaRt)
-library(ggplot2)
-library(clusterProfiler)
-library(PPInfer)
-
-
-DataFilterGO <- function(dat){
-  dat <- dat %>% filter(!is.na(padj))
-  return(dat)
-}
-
-
 # OPTIONAL: to update GO data
 Update_Go_data <- function(){
-  mart <- useEnsembl(biomart = 'ensembl', 
-                     dataset = 'drerio_gene_ensembl',
-                     mirror = 'asia')
   mapping_Ensembl_Entrez <- getBM(attributes = c("ensembl_gene_id", "entrezgene_id"), mart = mart)
   write.table(mapping_Ensembl_Entrez, "EnsemblToEntrez_Drerio.txt")
 }
 
 #SEA analysis
-SEAanalysis <- function(dat,pvalcut){
-  DE <- dat %>% dplyr::select(id, padj) %>% filter(padj < pvalcut)
-  DE_genes <- as.character(DE$id)
-  mapping_Ensembl_Entrez <- read.table("EnsemblToEntrez_Drerio.txt")
-  DE_genes <- (mapping_Ensembl_Entrez %>% filter(ensembl_gene_id %in% DE_genes))$entrezgene_id
+SEAanalysis <- function(pvals, pvalcut, organismDb){
+  DE_pvals <- pvals[pvals < pvalcut]
+  DE_genes <- names(DE_pvals)
   DE_genes <- DE_genes[!is.na(DE_genes)]
   
   ORA_dfs <- list()
   cats <- c("BP", "CC", "MF")
   for (cat in cats) {
-    ORA_df <- enrichGO(DE_genes, 'org.Dr.eg.db', ont=cat, pvalueCutoff=pvalcut)@result
+    ORA_df <- enrichGO(DE_genes, organismDb, ont=cat, pvalueCutoff=pvalcut)@result
     ORA_df <- data.frame(GO_term = ORA_df$ID, desc = ORA_df$Description, ratio = ORA_df$GeneRatio, pval = ORA_df$qvalue)
-    ORA_df <- ORA_df %>% separate(ratio, c("DE_n", "size"))
+    ORA_df <- ORA_df %>% tidyr::separate(ratio, c("DE_n", "size"))
     ORA_df <- ORA_df %>% mutate(DE_n = as.numeric(DE_n), size = as.numeric(size))
     
     ORA_dfs[[cat]] <- ORA_df
@@ -52,7 +33,6 @@ mf_SEA_Plot=function(ORA_dfs){
 }
 
 cc_SEA_Plot=function(ORA_dfs){
-  
   ggplot(ORA_dfs[[2]][1:10,], aes(x = desc, y = DE_n/size, fill = pval)) + geom_col()
 }
 
@@ -62,27 +42,10 @@ cc_SEA_Plot=function(ORA_dfs){
 ###########################################################################################################################
 #GSEA
 
-GSEAanalysis <- function(dat){
-  # mart <- useMart("ENSEMBL_MART_ENSEMBL", dataset = "drerio_gene_ensembl")
-  mart <- useEnsembl(biomart = 'ensembl', 
-                     dataset = 'drerio_gene_ensembl',
-                     mirror = 'asia')
-  mapping_Ensembl_Entrez <- read.table("EnsemblToEntrez_Drerio.txt")
-  mapping_Ensembl_Entrez <- mapping_Ensembl_Entrez %>% filter(ensembl_gene_id %in% dat$id & 
-                                                                !is.na(entrezgene_id) & 
-                                                                !duplicated(ensembl_gene_id) &
-                                                                !duplicated(entrezgene_id))
-  gsea_dat <- dat[dat$id %in% mapping_Ensembl_Entrez$ensembl_gene_id,] 
-  gsea_df <- data.frame(gsea_dat)
-  gsea_df <- gsea_df %>% mutate(FoldChange = 2^log2FoldChange, GeneID = mapping_Ensembl_Entrez$entrezgene_id) %>% 
-    dplyr::select(FoldChange)
-  geneList <- gsea_df$FoldChange
-  names(geneList) <- mapping_Ensembl_Entrez$entrezgene_id
-  geneList <- sort(geneList, decreasing = TRUE)
-  
-  ES_CC <- gseGO(geneList, OrgDb = "org.Dr.eg.db", pvalueCutoff = 1, ont = "CC")
-  ES_MF <- gseGO(geneList, OrgDb = "org.Dr.eg.db", pvalueCutoff = 1, ont = "MF")
-  ES_BP <- gseGO(geneList, OrgDb = "org.Dr.eg.db", pvalueCutoff = 1, ont = "BP")
+GSEAanalysis <- function(geneList, organismDb){
+  ES_CC <- gseGO(geneList, OrgDb = organismDb, pvalueCutoff = 1, ont = "CC")
+  ES_MF <- gseGO(geneList, OrgDb = organismDb, pvalueCutoff = 1, ont = "MF")
+  ES_BP <- gseGO(geneList, OrgDb = organismDb, pvalueCutoff = 1, ont = "BP")
   return(list("CC" =ES_CC,"MF"= ES_MF,"BP" = ES_BP))
 }
 

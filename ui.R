@@ -4,7 +4,7 @@ library(shinydashboardPlus)
 library(shinycssloaders)
 library(shinyalert)# for file format checking
 library(ggplot2)
-library(plotly) # to make dynamic ggplots
+# library(plotly) # to make dynamic ggplots
 library(DT) ## datatable results
 library(clusterProfiler) # gsea analysis
 library(enrichplot) #plots after gsea
@@ -15,12 +15,17 @@ library(msigdbr) # motifs
 library(dplyr)
 library(pathview) # kegg pathways png
 library(DOSE)
+library(PPInfer)
 
+source("ui_summary.R")
+source("ui_kegg.R")
+source("ui_go.R")
+source("ui_proteinDomain.R")
 
-source("summary.r")
-source("pathways.r")
-source("domains.r")
-source("GO_item.R")
+# source("summary.r")
+# source("pathways.r")
+# source("domains.r")
+# source("GO_item.R")
 
 dashboardPage(
     dashboardHeader(title = "EASE"),
