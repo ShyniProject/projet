@@ -9,7 +9,7 @@ proteinDomain <- function(input, output, session, org, organismsDbKegg, pvalues,
   
   # dataset = searchDatasets(mart = ensembl, pattern = "dre")
   ensembl = useEnsembl(biomart="ensembl")
-  dataset = searchDatasets(mart = ensembl, pattern = organismsDbKegg[org()])
+  dataset = searchDatasets(mart = ensembl, pattern = organismsDbKegg[org])
   ensembl = useEnsembl(biomart="ensembl", dataset = dataset$dataset)
   iprData <- getBM(attributes=c('ensembl_gene_id', 'interpro', 'interpro_description'), mart = ensembl)
   
@@ -54,7 +54,7 @@ proteinDomain <- function(input, output, session, org, organismsDbKegg, pvalues,
                        "org.Gg.eg.db"="Caenorhabditis elegans","org.Cf.eg.db"="Canis lupus familiaris","org.Ss.eg.db"="Sus scrofa")
   
   ## MOTIFS (GENE SET) DATA
-  motif.geneSet = msigdbr(species = organismsMsigdbr[org()], category = "C3")
+  motif.geneSet = msigdbr(species = organismsMsigdbr[org], category = "C3")
   head(motif.geneSet)
   motif.TERM2GENE = motif.geneSet %>% dplyr::select(gs_name, entrez_gene) %>% as.data.frame()
   

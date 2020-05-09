@@ -26,7 +26,14 @@ summary = tabItem(tabName = "summary",
                                                                 'text/plain',
                                                                 '.csv',
                                                                 '.tsv'))),
-                                    h1("Choose organism\n"),
+                                    column(width = 7, align = "center", offset = 2,
+                                      h1("Choose organism\n"),
+                                      selectInput("organismDb","Organism:", choices = NULL, selected = NULL)
+                                    ),
+                                    column(width = 7, align = "center", offset = 2,
+                                           h1("Choose ID database origin\n"),
+                                           selectInput("geneidDb","From:", choices = NULL, selected = NULL)
+                                    )
                     )),
                     useShinyalert(), #if data type not supported only
                     footer = NULL,
@@ -34,7 +41,6 @@ summary = tabItem(tabName = "summary",
                     width = 12
                   )),
                 
-                selectInput("organismDb","Organism:", choices = NULL, selected = NULL),
                 
                 h1("Whole data inspection"),
                 fluidRow(

@@ -1,8 +1,10 @@
 ########################################################
 ##########  organism choice  ##########
 ########################################################
-organismChoice<- function(input, output, session)
+userChoices<- function(input, output, session)
 {
+  results=list()
+  
   organismsDbChoices = c("Human (org.Hs.eg.db)"="org.Hs.eg.db","Mouse (org.Mm.eg.db)"="org.Mm.eg.db","Rat (org.Rn.eg.db)"="org.Rn.eg.db",
                          "Yeast (org.Sc.sgd.db)"="org.Sc.sgd.db","Fly (org.Dm.eg.db)"="org.Dm.eg.db","Arabidopsis (org.At.tair.db)"="org.At.tair.db",
                          "Zebrafish (org.Dr.eg.db)"="org.Dr.eg.db","Bovine (org.Bt.eg.db)"="org.Bt.eg.db","Worm (org.Ce.eg.db)"="org.Ce.eg.db",
@@ -11,19 +13,23 @@ organismChoice<- function(input, output, session)
                          "Chimp (org.Pt.eg.db)"="org.Pt.eg.db","Anopheles (org.Ag.eg.db)"="org.Ag.eg.db","Malaria (org.Pf.plasmo.db)"="org.Pf.plasmo.db",
                          "E coli strain Sakai (org.EcSakai.eg.db)"="org.EcSakai.eg.db")
   
+  # geneidDbChoices = c("ensembl" = "ENSEMBL", "ncbi" = "ENTREZID")
+  geneidDbChoices = keytypes(org.Dr.eg.db)
+
+  
   updateSelectInput(session, "organismDb", choices = organismsDbChoices, selected = "org.Dr.eg.db")
+  updateSelectInput(session, "geneidDb", choices = geneidDbChoices, selected = "ENSEMBL")
   
   # updateSelectInput(session, "pAdjustMethod", selected = "none")
   # updateNumericInput(session, "minGSSize", value = 3)
   # updateNumericInput(session, "maxGSSize", value = 800)
+
   observe({
-    org()
+    res()
   })
-  org <-eventReactive(input$organismDb,{
-    if(input$organismDb == "")
-      return(NULL)  
-    library(input$organismDb, character.only = T)
-    
-    input$organismDb
+  res <-eventReactive(c(input$organismDb, input$geneidDb),{
+    # print(list(org = input$organismDb, idDb = input$geneidDb))
+    list(org = input$organismDb, idDb = input$geneidDb)
   })
 }
+

@@ -13,7 +13,7 @@ go <- function(input, output, session, org, orgDb, pvalues, logF)
     withProgress(message = 'GO ... ', value = 1, {
       incProgress(2/5, detail = "SEA analysis...")
       
-      SEA_result <- SEAanalysis(pvalues, input$pv.GO, org())
+      SEA_result <- SEAanalysis(pvalues, input$pv.GO, org)
       #### Plots ####
       incProgress(3/5, detail = "SEA plots...")
       

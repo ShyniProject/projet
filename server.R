@@ -7,14 +7,15 @@ function(input, output, session)
   source("server_proteinDomain.R")
   
   ##### ATTENTION pour l'instant l'upload du fichier lance les analyses, avant le choix de l'espèce donc.
-  org <- organismChoice(input, output, session)
-  
+  choices <- userChoices(input, output, session)
   observe({
     analysis()
   })
   
   analysis <- eventReactive(input$data,{
-    orgDb <- eval(parse(text = org(), keep.source=FALSE))
+    # orgDb <- eval(parse(text = org(), keep.source=FALSE))
+    orgDb <- eval(parse(text = choices()$org, keep.source=FALSE))
+    org <- choices()$org
     
     ########################################################
     ##########  data type check  ##########
@@ -42,7 +43,14 @@ function(input, output, session)
     # entrezID <- mapIds(org.Dr.eg.db, as.vector(d$id), 'ENTREZID', 'ENSEMBL')
     
     d <- read.csv(input$data$datapath)
-    entrezID <- mapIds(orgDb, as.vector(d$id), 'ENTREZID', 'ENSEMBL')
+    ## gene ID database choice
+    if (choices()$idDb == "ENTREZID")
+    {
+      entrezID <- d$id
+    }else
+    {
+      entrezID <- mapIds(orgDb, as.vector(d$id), 'ENTREZID', choices()$idDb)
+    }
     
     ## for SEA : p-values vector and gene ids
     pvalues <- d$padj 
@@ -82,17 +90,17 @@ function(input, output, session)
                         "org.Pt.eg.db"="ptr","org.Ag.eg.db"="aga","org.Pf.plasmo.db"="pfa",
                         "org.EcSakai.eg.db"="ecs")
     
-    kegg(input, output, session, org(), organismsDbKegg, pvalues, logF)
+    kegg(input, output, session, org, organismsDbKegg, pvalues, logF)
 
     ########################################################
     ##########  Protein Domains  ##########
     ########################################################
-    # proteinDomain(input, output, session, org, organismsDbKegg, pvalues, logF, entrezID)
+    proteinDomain(input, output, session, org, organismsDbKegg, pvalues, logF, entrezID)
       
     ########################################################
     ##########                GO                  ##########
     ########################################################      
-    # go(input, output, session, org, orgDb, pvalues, logF)
+    go(input, output, session, org, orgDb, pvalues, logF)
         
   } 
 )}
