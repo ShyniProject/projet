@@ -26,6 +26,18 @@ Test dataset
 ---
 The test [dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE129081) on Danio rerio (Zebrafish) is extracted from the following [paper](https://www.nature.com/articles/s41588-019-0475-y) published in Nature in 2019. 
 
+How to run ?
+---
+*First Option*
+
+	#Git Clone
+	#Open ui.R on Rstudio
+	#Run
+	
+*Second Option*
+
+Use the following [link](https://jflorian.shinyapps.io/EASE/)
+
 
 Whole data inspection
 ---
