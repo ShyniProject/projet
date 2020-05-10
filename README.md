@@ -32,7 +32,6 @@ Whole data inspection
 
 
 *File Browse : csv file with header*
-id Gene	baseMean log2FoldChange pvalue padj Biotype Orthologous_human_gene
 
 
 	#Respect header order
