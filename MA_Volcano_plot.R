@@ -5,18 +5,11 @@
 ## Date: 23/03/2020                                   #
 ## Author: Arnoux Jérôme                              #
 #######################################################
-library(edgeR)
-library(SummarizedExperiment)
-library(readr)
-library(dplyr)
-library(ggplot2)
-library(shiny)
-
 
 ##Fonction 
 data.filtering=function(input,logFcCut,padjCut){
-  mutate.input=input %>% 
-    mutate(SigFC=ifelse(abs(log2FoldChange)>logFcCut, 1, 0)) %>%
+    mutate.input=input %>% 
+    mutate(SigFC=ifelse(abs(as.numeric(as.vector(log2FoldChange)))>logFcCut, 1, 0)) %>%
     mutate(SigPadj=ifelse(padj<padjCut,1,0)) %>%
     mutate(Legendary=ifelse(SigFC==1,
                             ifelse(SigPadj==1, #SigFC vaut 1
@@ -27,13 +20,14 @@ data.filtering=function(input,logFcCut,padjCut){
                                    paste0("logFC<",logFcCut," and padj>",padjCut)))) %>%
     mutate(negLogpadj=-log10(padj)) %>%
     mutate(logBaseMean=log(baseMean,2)) %>%
-    dplyr::select(id:Orthologous_human_gene,Legendary:logBaseMean)
-  return(mutate.input)
+    # dplyr::select(id:Orthologous_human_gene,Legendary:logBaseMean)
+    dplyr::select(-SigFC,-SigPadj)
+    return(mutate.input)
 }
 
 #VolcanoPlot
 VolcanoPlot=function(data){
-  ggplot(data,aes(x=log2FoldChange, y=negLogpadj, color=Legendary)) +
+    ggplot(data,aes(x=log2FoldChange, y=negLogpadj, color=Legendary)) +
     geom_point() +
     coord_cartesian() +
     ylab("-log10 padj") +
