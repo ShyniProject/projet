@@ -139,8 +139,13 @@ GO
 ## Authors
 
 Jerôme Arnoux
+
 Chloé Beaumont
+
 Alba Caparros-Roissard
+
 Florian Jeanneret
+
 Maud Repellin
+
 
