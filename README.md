@@ -136,9 +136,11 @@ GO
 
 ![](./Images/Barplot_Molecular_Function_GSEA.png)
 
-## Appendix and FAQ
+## Authors
 
-:::info
-**Find this document incomplete?** Leave a comment!
-:::
+Jerôme Arnoux
+Chloé Beaumont
+Alba Caparros-Roissard
+Florian Jeanneret
+Maud Repellin
 
