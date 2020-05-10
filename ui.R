@@ -1,3 +1,12 @@
+# ===============================================
+# To istall all packages uncomment the line below
+# ===============================================
+# anyLib.packages=c("shiny", "shinydashboard", "shinydashboardPlus", "shinycssloaders", "shinyalert", 
+#                   "ggplot2", "DT", "clusterProfiler", "enrichplot", "org.Dr.eg.db", "KEGG.db", "KEGGREST", 
+#                   "msigdbr", "dplyr", "pathview", "DOSE", "PPInfer")
+# anyLib::anyLib(anyLib.packages, autoUpdate = T)
+# ===============================================
+
 library(shiny)
 library(shinydashboard)
 library(shinydashboardPlus)
