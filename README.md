@@ -1,4 +1,4 @@
-# EASE - Enrichment Analysis Shniy Environment
+# EASE - Enrichment Analysis Shiny Environment
 
 EASE is an application to study the comprehensive functional analysis of a large gene set with 3 important fields integration : Pathways, gene ontology and protein domains
 
