@@ -106,6 +106,7 @@ GO
 ---
 
 *Representation of main differentially expressed Biological Processes*
+	
 	# SEA Histogram with corresponding descriptive table 
 	# GSEA Barplot with correspondong descriptive table 
 
@@ -127,6 +128,7 @@ GO
 
 
 *Representation of main differentially expressed Molecular fonction*
+	
 	# SEA Histogram with corresponding descriptive table 
 	# GSEA Barplot with correspondong descriptive table
 
