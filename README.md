@@ -14,7 +14,7 @@ anyLib::anyLib(anyLib.packages, autoUpdate = T)
 
 Test dataset
 ---
-![](./ShinyProject/Rendu/blob/master/GSE129081_small.csv)
+[![article](https://www.nature.com/articles/s41588-019-0475-y)
 
 Summary
 ---
