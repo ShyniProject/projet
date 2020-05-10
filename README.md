@@ -12,6 +12,10 @@ anyLib.packages=c("shiny", "shinydashboard", "shinydashboardPlus", "shinycssload
 anyLib::anyLib(anyLib.packages, autoUpdate = T)
 ```
 
+Test dataset
+---
+![](./ShinyProject/Rendu/blob/master/GSE129081_small.csv)
+
 Summary
 ---
 
