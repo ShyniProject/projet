@@ -10,6 +10,20 @@ Shiny Project
 
 [TOC]
 
+# EASE - Enrichment Analysis Shniy Environment
+
+EASE is an application to study the comprehensive functional analysis of a large gene set with 3 important fields integration : Pathways, gene ontology and protein domains
+
+PACKAGES - Installation
+---
+
+```R
+anyLib.packages=c("shiny", "shinydashboard", "shinydashboardPlus", "shinycssloaders", "shinyalert", 
+                  "ggplot2", "DT", "clusterProfiler", "enrichplot", "org.Dr.eg.db", "KEGG.db", "KEGGREST", 
+                  "msigdbr", "dplyr", "pathview", "DOSE", "PPInfer")
+anyLib::anyLib(anyLib.packages, autoUpdate = T)
+```
+
 Summary
 ---
 
@@ -40,6 +54,7 @@ Pathways - SEA & GSEA
 
 
 *Dot plot with pathways significantly enriched as a function of the gene ratio (number of genes in the dataset differentially expressed on the number of genes that make up the pathway)*
+
 	#Specifiy number of category
 
 ![](./Images/Dot_Plot_SEA_Pathway.png)
@@ -47,10 +62,12 @@ Pathways - SEA & GSEA
 
 
 *Pathway Viewer*
+
 	#drop-down list to choose pathway to see
 
 
 *GSEA only Ridge plot*
+
 	#Specifiy number of category
 
 
@@ -97,6 +114,7 @@ GO
 
 
 *Representation of main differentially expressed Cellular Component*
+
 	# SEA Histogram with corresponding descriptive table 
 	# GSEA Barplot with correspondong descriptive table
 
