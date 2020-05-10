@@ -1,15 +1,3 @@
-Shiny Project
-===
-![downloads](https://img.shields.io/github/downloads/atom/atom/total.svg)
-
-![build](https://img.shields.io/appveyor/build/:user/:repo.svg)
-
-![chat](https://img.shields.io/discord/:serverId.svg)
-
-## Table of Contents
-
-[TOC]
-
 # EASE - Enrichment Analysis Shniy Environment
 
 EASE is an application to study the comprehensive functional analysis of a large gene set with 3 important fields integration : Pathways, gene ontology and protein domains
