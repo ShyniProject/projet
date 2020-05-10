@@ -1,7 +1,17 @@
 # EASE - Enrichment Analysis Shiny Environment
 
-EASE is an application to study the comprehensive functional analysis of a large gene set with 3 important fields integration : Pathways, gene ontology and protein domains
+EASE is an application to study the comprehensive functional analysis of a large gene set with 3 important fields integration : Pathways, gene ontology and protein domains.
+The application is composed of 4 parts : Whole data inspection, pathways, gene ontology and protein domains.
 
+
+Input Format
+---
+
+csv or text/csv file only with "id" for gene ID, "padj" for p-values adjusted and "log2FoldChange" columns.
+
+	#Choose the organism
+	#Choose the id database origin from databases available for the organism 
+	
 PACKAGES - Installation
 ---
 
@@ -17,7 +27,7 @@ Test dataset
 The test [dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE129081) on Danio rerio (Zebrafish) is extracted from the following [paper](https://www.nature.com/articles/s41588-019-0475-y) published in Nature in 2019. 
 
 
-Summary
+Whole data inspection
 ---
 
 
