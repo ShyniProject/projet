@@ -15,21 +15,33 @@ userChoices<- function(input, output, session)
   
   # geneidDbChoices = c("ensembl" = "ENSEMBL", "ncbi" = "ENTREZID")
   geneidDbChoices = keytypes(org.Dr.eg.db)
-
+  
+  pv.adjustMethods = c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none")
   
   updateSelectInput(session, "organismDb", choices = organismsDbChoices, selected = "org.Dr.eg.db")
   updateSelectInput(session, "geneidDb", choices = geneidDbChoices, selected = "ENSEMBL")
+  updateNumericInput(session, "minGSSize", value = 10)
+  updateNumericInput(session, "maxGSSize", value = 800)
+  updateNumericInput(session, "nPerm", value = 10000)
+  updateSelectInput(session, "pvAdjust", choices = pv.adjustMethods, selected = "BH")
   
-  # updateSelectInput(session, "pAdjustMethod", selected = "none")
-  # updateNumericInput(session, "minGSSize", value = 3)
-  # updateNumericInput(session, "maxGSSize", value = 800)
-
+  observe({
+    orgDBdownload()
+  })
+  orgDBdownload <-eventReactive(input$organismDb,{
+    if(input$organismDb == "")
+      return(NULL)
+    library(input$organismDb, character.only = T)
+    orgDb <- eval(parse(text = input$organismDb, keep.source=FALSE))
+    updateSelectInput(session, "geneidDb", choices = keytypes(orgDb), selected = "ENSEMBL")
+  })
+  
   observe({
     res()
   })
-  res <-eventReactive(c(input$organismDb, input$geneidDb),{
+  res <-eventReactive(c(input$organismDb, input$geneidDb, input$minGSSize, input$maxGSSize, input$nPerm, input$pvAdjust),{
     # print(list(org = input$organismDb, idDb = input$geneidDb))
-    list(org = input$organismDb, idDb = input$geneidDb)
+    list(org = input$organismDb, idDb = input$geneidDb, minGS = input$minGSSize, maxGS = input$maxGSSize, nPerm = input$nPerm, pvAdjust = input$pvAdjust) 
   })
 }
 

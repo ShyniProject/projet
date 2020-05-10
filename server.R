@@ -16,6 +16,11 @@ function(input, output, session)
     # orgDb <- eval(parse(text = org(), keep.source=FALSE))
     orgDb <- eval(parse(text = choices()$org, keep.source=FALSE))
     org <- choices()$org
+    minGS <- choices()$minGS
+    maxGS <- choices()$maxGS
+    nPerm <- choices()$nPerm
+    pvAdjustMethod = choices()$pvAdjust
+    
     
     ########################################################
     ##########  data type check  ##########
@@ -54,12 +59,13 @@ function(input, output, session)
     
     ## for SEA : p-values vector and gene ids
     pvalues <- d$padj 
-    names(pvalues) <- entrezID
+    names(pvalues) <- entrezID 
     
     ## for GSEA : LogF vector and gene ids
-    logF = d$log2FoldChange 
-    names(logF) <- entrezID
+    logF = as.numeric(as.vector(d$log2FoldChange)); 
+    names(logF) <- entrezID 
     logF = logF[which(!is.na(names(logF)))] ; logF = na.exclude(logF)#17 809 samples
+    logF = logF[is.finite(logF)]
     ## delete duplicated genes -> median value computed
     if(length(which(duplicated(names(logF))==T))>0)
     {
@@ -71,9 +77,8 @@ function(input, output, session)
       logF = newdf$value
       names(logF) = newdf$id # 17 777
     }
-    
+
     logF = sort(logF, decreasing = TRUE) # decreasing vector to gsea
-    
     ########################################################
     ##########  SUMMARY  ##########
     ########################################################
@@ -81,7 +86,7 @@ function(input, output, session)
     
     ########################################################
     ##########  KEGG  ##########
-    ########################################################
+    ########################################################library(gdc)
     organismsDbKegg = c("org.Hs.eg.db"="hsa","org.Mm.eg.db"="mmu","org.Rn.eg.db"="rno",
                         "org.Sc.sgd.db"="sce","org.Dm.eg.db"="dme","org.At.tair.db"="ath",
                         "org.Dr.eg.db"="dre","org.Bt.eg.db"="bta","org.Ce.eg.db"="cel",
@@ -90,17 +95,17 @@ function(input, output, session)
                         "org.Pt.eg.db"="ptr","org.Ag.eg.db"="aga","org.Pf.plasmo.db"="pfa",
                         "org.EcSakai.eg.db"="ecs")
     
-    kegg(input, output, session, org, organismsDbKegg, pvalues, logF)
+    kegg(input, output, session, org, organismsDbKegg, pvalues, logF, minGS, maxGS, nPerm, pvAdjustMethod)
 
     ########################################################
     ##########  Protein Domains  ##########
     ########################################################
-    proteinDomain(input, output, session, org, organismsDbKegg, pvalues, logF, entrezID)
+    proteinDomain(input, output, session, org, organismsDbKegg, pvalues, logF, entrezID, minGS, maxGS, nPerm, pvAdjustMethod)
       
     ########################################################
     ##########                GO                  ##########
     ########################################################      
-    go(input, output, session, org, orgDb, pvalues, logF)
+    # go(input, output, session, org, orgDb, pvalues, logF, minGS, maxGS, nPerm, pvAdjustMethod)
         
   } 
 )}

@@ -6,7 +6,7 @@ GO <-tabItem(tabName = "GO",
               sliderInput("pv.GO", label = h3("p-value threshold : "), min = 0, 
                           max = 0.1, value = 0.05),
              
-             ########## Biologicial processes - GSEA
+             ########## Biologicial processes - SEA
              ## TABLE
              fluidRow(
                box(collapsible = TRUE,
@@ -27,6 +27,9 @@ GO <-tabItem(tabName = "GO",
                           title = span(icon("sort-amount-up"),"Biological Process Plot"), status = "info", width = NULL,
                           column(width = 9,
                                  plotOutput("SEA_bp") %>% withSpinner(color = "#b68f40", type = 6)
+                          ),
+                          column(width = 3, 
+                                 downloadButton("dl.SEAGO_BP_hist", "Download")       
                           )
                       ), 
                )),
@@ -52,6 +55,9 @@ GO <-tabItem(tabName = "GO",
                           title = span(icon("sort-amount-up"),"Molecular Function Plot"), status = "info", width = NULL,
                           column(width = 9,
                                  plotOutput("SEA_mf") %>% withSpinner(color = "#b68f40", type = 6)
+                          ),
+                          column(width = 3, 
+                                 downloadButton("dl.SEAGO_MF_hist", "Download")       
                           )
                       ), 
                )),
@@ -77,6 +83,9 @@ GO <-tabItem(tabName = "GO",
                           title = span(icon("sort-amount-up"),"Cellular Component Plot"), status = "info", width = NULL,
                           column(width = 9,
                                  plotOutput("SEA_cc") %>% withSpinner(color = "#b68f40", type = 6)
+                          ),
+                          column(width = 3, 
+                                 downloadButton("dl.SEAGO_CC_hist", "Download")       
                           )
                       ), 
 
@@ -86,7 +95,7 @@ GO <-tabItem(tabName = "GO",
               ########## Biologicial processes - SEA
               ## TABLE
                box(collapsible = TRUE,
-                   title = span(icon("th-list"),"GSEA table : Biological Functions"), status = "info", width = NULL,
+                   title = span(icon("th-list"),"GSEA table : Biological Process"), status = "info", width = NULL,
                    column(width = 10,
                           DT::dataTableOutput("GO_BP.GSEA.Table") %>% withSpinner(color = "#b68f40")
                    ),
@@ -102,6 +111,9 @@ GO <-tabItem(tabName = "GO",
                           title = span(icon("sort-amount-up"),"Biological Process Plot"), status = "info", width = NULL,
                           column(width = 9,
                                  plotOutput("GSEA_bp") %>% withSpinner(color = "#b68f40", type = 6)
+                          ),
+                          column(width = 3, 
+                                 downloadButton("dl.GSEAGO_BP_hist", "Download")       
                           )
                       ), 
                )),
@@ -126,6 +138,9 @@ GO <-tabItem(tabName = "GO",
                           title = span(icon("sort-amount-up"),"Molecular Functions Plot"), status = "info", width = NULL,
                           column(width = 9,
                                  plotOutput("GSEA_mf") %>% withSpinner(color = "#b68f40", type = 6)
+                          ),
+                          column(width = 3, 
+                                 downloadButton("dl.GSEAGO_MF_hist", "Download")       
                           )
                       ), 
                )),
@@ -150,6 +165,9 @@ GO <-tabItem(tabName = "GO",
                           title = span(icon("sort-amount-up"),"Cellular Components Plot"), status = "info", width = NULL,
                           column(width = 9,
                                  plotOutput("GSEA_cc") %>% withSpinner(color = "#b68f40", type = 6)
+                          ),
+                          column(width = 3, 
+                                 downloadButton("dl.GSEAGO_CC_hist", "Download")       
                           )
                       ), 
                )),

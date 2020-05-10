@@ -1,11 +1,11 @@
-# OPTIONAL: to update GO data
-Update_Go_data <- function(){
-  mapping_Ensembl_Entrez <- getBM(attributes = c("ensembl_gene_id", "entrezgene_id"), mart = mart)
-  write.table(mapping_Ensembl_Entrez, "EnsemblToEntrez_Drerio.txt")
-}
+# # OPTIONAL: to update GO data
+# Update_Go_data <- function(){
+#   mapping_Ensembl_Entrez <- getBM(attributes = c("ensembl_gene_id", "entrezgene_id"), mart = mart)
+#   write.table(mapping_Ensembl_Entrez, "EnsemblToEntrez_Drerio.txt")
+# }
 
 #SEA analysis
-SEAanalysis <- function(pvals, pvalcut, organismDb){
+SEAanalysis <- function(pvals, pvalcut, organismDb, minGSSize, maxGSSize, pAdjustMethod){
   DE_pvals <- pvals[pvals < pvalcut]
   DE_genes <- names(DE_pvals)
   DE_genes <- DE_genes[!is.na(DE_genes)]
@@ -13,7 +13,14 @@ SEAanalysis <- function(pvals, pvalcut, organismDb){
   ORA_dfs <- list()
   cats <- c("BP", "CC", "MF")
   for (cat in cats) {
-    ORA_df <- enrichGO(DE_genes, organismDb, ont=cat, pvalueCutoff=pvalcut)@result
+    ORA_df <- enrichGO(DE_genes, 
+                       organismDb,
+                       keyType = "ENTREZID",
+                       ont=cat, 
+                       pvalueCutoff=pvalcut,
+                       minGSSize = minGSSize,
+                       maxGSSize = maxGSSize,
+                       pAdjustMethod = pAdjustMethod)@result
     ORA_df <- data.frame(GO_term = ORA_df$ID, desc = ORA_df$Description, ratio = ORA_df$GeneRatio, pval = ORA_df$qvalue)
     ORA_df <- ORA_df %>% tidyr::separate(ratio, c("DE_n", "size"))
     ORA_df <- ORA_df %>% mutate(DE_n = as.numeric(DE_n), size = as.numeric(size))
@@ -42,10 +49,10 @@ cc_SEA_Plot=function(ORA_dfs){
 ###########################################################################################################################
 #GSEA
 
-GSEAanalysis <- function(geneList, organismDb){
-  ES_CC <- gseGO(geneList, OrgDb = organismDb, pvalueCutoff = 1, ont = "CC")
-  ES_MF <- gseGO(geneList, OrgDb = organismDb, pvalueCutoff = 1, ont = "MF")
-  ES_BP <- gseGO(geneList, OrgDb = organismDb, pvalueCutoff = 1, ont = "BP")
+GSEAanalysis <- function(geneList, organismDb, minGS, maxGS, nPerm, pvAdjustMethod){
+  ES_CC <- gseGO(geneList, OrgDb = organismDb, keyType = "ENTREZID", pvalueCutoff = 0.2, ont = "CC", minGSSize = minGS, maxGSSize = maxGS, pAdjustMethod = pvAdjustMethod)
+  ES_MF <- gseGO(geneList, OrgDb = organismDb, keyType = "ENTREZID", pvalueCutoff = 0.2, ont = "MF", minGSSize = minGS, maxGSSize = maxGS, pAdjustMethod = pvAdjustMethod)
+  ES_BP <- gseGO(geneList, OrgDb = organismDb, keyType = "ENTREZID", pvalueCutoff = 0.2, ont = "BP", minGSSize = minGS, maxGSSize = maxGS, pAdjustMethod = pvAdjustMethod)
   return(list("CC" =ES_CC,"MF"= ES_MF,"BP" = ES_BP))
 }
 

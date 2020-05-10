@@ -28,11 +28,29 @@ summary = tabItem(tabName = "summary",
                                                                 '.tsv'))),
                                     column(width = 7, align = "center", offset = 2,
                                       h1("Choose organism\n"),
-                                      selectInput("organismDb","Organism:", choices = NULL, selected = NULL)
+                                      selectInput("organismDb",icon("paw"), choices = NULL, selected = NULL)
                                     ),
                                     column(width = 7, align = "center", offset = 2,
-                                           h1("Choose ID database origin\n"),
-                                           selectInput("geneidDb","From:", choices = NULL, selected = NULL)
+                                      h1("Choose ID database origin\n"),
+                                      selectInput("geneidDb",icon("database"), choices = NULL, selected = NULL)
+                                    ),
+                                    column(width = 7, align = "center", offset = 2,
+                                      h1("Enrichment details\n"),
+                                        box(collapsible = TRUE,
+                                               title = span(icon("Gear")), status = "primary", width = NULL,
+                                               column(width = 6,
+                                                      numericInput("minGSSize", "Minimal number of genes in pathways:", value = 5, min = 1, max = 5000, step = 1)
+                                               ),
+                                               column(width = 6,
+                                                      numericInput("maxGSSize", "Maximal number of genes in pathways:", value = 800, min = 1, max = 5000, step = 1)
+                                               ),
+                                               column(width = 6,
+                                                      numericInput("nPerm", "Permutation number for GSEA's p-values:", value = 800, min = 1, max = 5000, step = 1)
+                                               ),
+                                               column(width = 6,
+                                                      selectInput("pvAdjust","p-value correction method:", choices = NULL, selected = NULL)
+                                               ),
+                                        ),
                                     )
                     )),
                     useShinyalert(), #if data type not supported only

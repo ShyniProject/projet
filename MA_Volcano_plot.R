@@ -9,7 +9,7 @@
 ##Fonction 
 data.filtering=function(input,logFcCut,padjCut){
     mutate.input=input %>% 
-    mutate(SigFC=ifelse(abs(log2FoldChange)>logFcCut, 1, 0)) %>%
+    mutate(SigFC=ifelse(abs(as.numeric(as.vector(log2FoldChange)))>logFcCut, 1, 0)) %>%
     mutate(SigPadj=ifelse(padj<padjCut,1,0)) %>%
     mutate(Legendary=ifelse(SigFC==1,
                             ifelse(SigPadj==1, #SigFC vaut 1
@@ -20,7 +20,8 @@ data.filtering=function(input,logFcCut,padjCut){
                                    paste0("logFC<",logFcCut," and padj>",padjCut)))) %>%
     mutate(negLogpadj=-log10(padj)) %>%
     mutate(logBaseMean=log(baseMean,2)) %>%
-    dplyr::select(id:Orthologous_human_gene,Legendary:logBaseMean)
+    # dplyr::select(id:Orthologous_human_gene,Legendary:logBaseMean)
+    dplyr::select(-SigFC,-SigPadj)
     return(mutate.input)
 }
 

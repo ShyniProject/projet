@@ -1,7 +1,7 @@
 ########################################################
 ##########  KEGG  ##########
 ########################################################
-kegg <- function(input, output, session, org, organismsDbKegg, pvalues, logF)
+kegg <- function(input, output, session, org, organismsDbKegg, pvalues, logF, minGS, maxGS, nPerm, pvAdjustMethod)
 {
 
   ### SEA ###
@@ -9,20 +9,27 @@ kegg <- function(input, output, session, org, organismsDbKegg, pvalues, logF)
   gene = pvalues[pvalues<0.05]
   Kegg.SEA = enrichKEGG(gene = names(gene),
                         organism = organismsDbKegg[org],
-                        pvalueCutoff = 0.05)
+                        keyType = "ncbi-geneid",
+                        pvalueCutoff = 0.05,
+                        minGSSize = minGS,
+                        maxGSSize = maxGS,
+                        pAdjustMethod = pvAdjustMethod)
   observe({SEA()})
   SEA <- eventReactive(input$pv.KEGG,{
     withProgress(message = 'SEA ... ', value = 0, {
-      
       gene = pvalues[pvalues<input$pv.KEGG]
       Kegg.SEA = enrichKEGG(gene = names(gene),
                             organism     = organismsDbKegg[org],
-                            pvalueCutoff = input$pv.KEGG)
+                            keyType = "ncbi-geneid",
+                            pvalueCutoff = input$pv.KEGG, 
+                            minGSSize = minGS,
+                            maxGSSize = maxGS,
+                            pAdjustMethod = pvAdjustMethod)
       ## TABLE ##
       incProgress(1/3, detail = "dynamic results table...")    
       K.SEA_description = dplyr::select(Kegg.SEA@result, ID, Description)
       K.SEA_description$ID = paste0("<a href=https://www.kegg.jp/kegg-bin/show_pathway?", K.SEA_description$ID," target='_blank'>",K.SEA_description$ID,"</a>")
-      K.SEA_value = dplyr::select(Kegg.SEA@result, everything(), -ID, -Description , -GeneRatio, -geneID,-BgRatio) %>% round(4)
+      K.SEA_value = dplyr::select(Kegg.SEA@result, everything(), -ID, -Description , -GeneRatio, -geneID,-BgRatio) %>% round(5)
       K.SEA = cbind(K.SEA_description, K.SEA_value)
       K.SEAtoSAVE = dplyr::select(K.SEA, everything(), -ID)
       output$K.SEA.Table = DT::renderDataTable({
@@ -67,7 +74,7 @@ kegg <- function(input, output, session, org, organismsDbKegg, pvalues, logF)
             
             list(src = paste0(input$pathwayChoice_SEA, ".pathview.png"),
                  contentType = 'image/png',
-                 width = session$clientData$output_pathwayViewer_width*session$clientData$pixelratio*0.7,
+                 width = session$clientData$output_pathwayViewer_width*session$clientData$pixelratio*0.65,
                  height = session$clientData$output_pathwayViewer_height*session$clientData$pixelratio
             )
           })
@@ -88,11 +95,12 @@ kegg <- function(input, output, session, org, organismsDbKegg, pvalues, logF)
   withProgress(message = 'GSEA ... ', value = 0, {
     Kegg.GSEA <-  gseKEGG(geneList = logF,
                           organism     = organismsDbKegg[org],
-                          nPerm        = 1000,
-                          minGSSize    = 10,
-                          maxGSSize    = 500,
+                          keyType = "ncbi-geneid",
+                          nPerm        = nPerm,
+                          minGSSize    = minGS,
+                          maxGSSize    = maxGS,
                           pvalueCutoff = 0.05,
-                          # pAdjustMethod = "BH",
+                          pAdjustMethod = pvAdjustMethod,
                           verbose      = FALSE) 
     
     ## TABLE ##

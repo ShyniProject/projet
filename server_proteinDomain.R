@@ -1,34 +1,41 @@
-proteinDomain <- function(input, output, session, org, organismsDbKegg, pvalues, logF, entrezID)
+proteinDomain <- function(input, output, session, org, organismsDbKegg, pvalues, logF, entrezID, minGS, maxGS, nPerm, pvAdjustMethod)
 {
   ########################################################
   ##########  Protein Domains  ##########
   ########################################################
   ## Protein domains DATA
   library(biomaRt)
-  # pDomains = read.csv("mart_export_INTERPRO.txt")
-  
   # dataset = searchDatasets(mart = ensembl, pattern = "dre")
   ensembl = useEnsembl(biomart="ensembl")
   dataset = searchDatasets(mart = ensembl, pattern = organismsDbKegg[org])
   ensembl = useEnsembl(biomart="ensembl", dataset = dataset$dataset)
-  iprData <- getBM(attributes=c('ensembl_gene_id', 'interpro', 'interpro_description'), mart = ensembl)
+
+  iprData <- getBM(attributes=c('entrezgene_id', 'interpro', 'interpro_description'), mart = ensembl,
+                   filter="entrezgene_id",
+                   values = entrezID,
+                   uniqueRows = TRUE)
   
-  pD.TERM2GENE = dplyr::select(iprData, interpro, ensembl_gene_id)
+  pD.TERM2GENE = dplyr::select(iprData, interpro, entrezgene_id)
   # pD.TERM2GENE$Gene.stable.ID <- mapIds(orgDb, as.vector(pD.TERM2GENE$ensembl_gene_id), 'ENTREZID', 'ENSEMBL')
   pD.TERM2NAME = dplyr::select(iprData, interpro, interpro_description)
   
   gene <- pvalues
-  names(gene) <- names(entrezID)
+  names(gene) <- entrezID
   gene = gene[gene<0.05]
   
   ## ANALYSIS ##
-  pDomains.SEA = enricher(names(gene), TERM2GENE = pD.TERM2GENE, TERM2NAME = pD.TERM2NAME)
+  pDomains.SEA = enricher(names(gene), 
+                          TERM2GENE = pD.TERM2GENE,
+                          TERM2NAME = pD.TERM2NAME,
+                          minGSSize = minGS,
+                          maxGSSize = maxGS,
+                          pAdjustMethod = pvAdjustMethod)
   
   ## TABLE ## 
   proteinDomains.SEA_description = dplyr::select(pDomains.SEA@result, ID, Description)
-  proteinDomains.SEA_description$ID = paste0("<a href=https://www.ebi.ac.uk/interpro/entry/InterPro/IPR001064/", 
+  proteinDomains.SEA_description$ID = paste0("<a href=https://www.ebi.ac.uk/interpro/entry/InterPro/", 
                                              proteinDomains.SEA_description$ID," target='_blank'>",proteinDomains.SEA_description$ID,"</a>")
-  proteinDomains.SEA_value = dplyr::select(pDomains.SEA@result, everything(), -ID, -Description , -GeneRatio, -geneID,-BgRatio) %>% round(4)
+  proteinDomains.SEA_value = dplyr::select(pDomains.SEA@result, everything(), -ID, -Description , -GeneRatio, -geneID,-BgRatio) %>% round(5)
   proteinDomains.SEA = cbind(proteinDomains.SEA_description, proteinDomains.SEA_value)
   proteinDomains.SEAtoSAVE = dplyr::select(proteinDomains.SEA, everything(), -ID)
   
@@ -61,18 +68,25 @@ proteinDomain <- function(input, output, session, org, organismsDbKegg, pvalues,
   ## GSEA
   ## ANALYSIS ##
   withProgress(message = 'Motif GSEA ... ', value = 0, {
-    motifs.GSEA <- GSEA(logF, TERM2GENE=motif.TERM2GENE, pvalueCutoff = 0.15, nPerm = 10000, pAdjustMethod = "BH")
+    motifs.GSEA <- GSEA(logF, 
+                        TERM2GENE=motif.TERM2GENE, 
+                        pvalueCutoff = 0.15, 
+                        nPerm = nPerm, 
+                        pAdjustMethod = pvAdjustMethod, 
+                        minGSSize = minGS,
+                        maxGSSize = maxGS)
     head(motifs.GSEA@result$ID)
     
     ## TABLE ##
     incProgress(1/2, detail = "Motif dynamic results table...")    
     Motif.GSEA_description = dplyr::select(motifs.GSEA@result, ID, Description)
     Motif.GSEA_description$ID = paste0("<a href=https://www.gsea-msigdb.org/gsea/msigdb/geneset_page.jsp?geneSetName=", Motif.GSEA_description$ID," target='_blank'>",Motif.GSEA_description$ID,"</a>")
-    Motif.GSEA_value = dplyr::select(motifs.GSEA@result, setSize:p.adjust, -NES) %>% round(3)
+    Motif.GSEA_value = dplyr::select(motifs.GSEA@result, setSize:p.adjust, -NES) %>% round(5)
     Motif.GSEA = cbind(Motif.GSEA_description, Motif.GSEA_value)
+    Motif.GSEAtoSAVE = dplyr::select(Motif.GSEA, everything(), -Description, -setSize)
     
     output$Motif.GSEA.Table = DT::renderDataTable({
-      Motif.GSEA
+      Motif.GSEAtoSAVE
     }, escape = F) # escape FALSE to make url
     
     ## PLOTS ##

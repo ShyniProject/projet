@@ -22,7 +22,6 @@ summary <- function(input, output, session, RNAseqDF)
       observe({clickVolc()})
       clickVolc <- eventReactive(input$plot_click.Volcano,{
         
-        
         clicked.Volcano <-  nearPoints(dataFiltered, input$plot_click.Volcano, xvar = "log2FoldChange", yvar = "negLogpadj")
         #Prend en compte un nombre de point proche du pointeur 
         

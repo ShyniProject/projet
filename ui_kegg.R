@@ -18,9 +18,7 @@ pathways = tabItem(tabName = "pathways",
            box(collapsible = TRUE,
                title = span(icon("sort-amount-up"), "Dot plot - SEA"), status = "primary", width = NULL,
                column(width = 3,
-                      numericInput("categNb_DP_SEAK", "Category number : ", 10, min = 1, max = 40, step = 5)
-               ),
-               column(width = 2,
+                      numericInput("categNb_DP_SEAK", "Category number : ", 10, min = 1, max = 40, step = 5),
                       downloadButton("dl.KEGG_dotPlot", "Download")
                ),
                column(width = 9,
