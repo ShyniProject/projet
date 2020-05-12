@@ -31,6 +31,7 @@ userChoices<- function(input, output, session)
   orgDBdownload <-eventReactive(input$organismDb,{
     if(input$organismDb == "")
       return(NULL)
+    anyLib::anyLib(input$organismDb, autoUpdate = T) 
     library(input$organismDb, character.only = T)
     orgDb <- eval(parse(text = input$organismDb, keep.source=FALSE))
     updateSelectInput(session, "geneidDb", choices = keytypes(orgDb), selected = "ENSEMBL")

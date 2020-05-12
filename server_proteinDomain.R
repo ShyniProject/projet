@@ -1,3 +1,23 @@
+ORA <- function(mapping, DE_genes) 
+{
+  ORA_df <- data.frame(interpro = unique(mapping$interpro))
+  size <- c()
+  DE_n <- c()
+  pval <- c()
+  for (interpro in ORA_df$interpro) {
+    k <- sum(mapping$interpro == interpro)
+    x <- sum(mapping$interpro == interpro & mapping$entrezgene_id %in% DE_genes)
+    size <- c(size, k)
+    DE_n <- c(DE_n, x)
+    pval <- c(pval, dhyper(x, length(DE_genes), length(unique(mapping$entrezgene_id)), k))
+  }
+  ORA_df$size <- size
+  ORA_df$DE_n <- DE_n
+  ORA_df$pval <- pval
+  ORA_df <- ORA_df %>% arrange(pval)
+  return(ORA_df)
+}
+
 proteinDomain <- function(input, output, session, org, organismsDbKegg, pvalues, logF, entrezID, minGS, maxGS, nPerm, pvAdjustMethod)
 {
   ########################################################
@@ -19,38 +39,69 @@ proteinDomain <- function(input, output, session, org, organismsDbKegg, pvalues,
   # pD.TERM2GENE$Gene.stable.ID <- mapIds(orgDb, as.vector(pD.TERM2GENE$ensembl_gene_id), 'ENTREZID', 'ENSEMBL')
   pD.TERM2NAME = dplyr::select(iprData, interpro, interpro_description)
   
-  gene <- pvalues
-  names(gene) <- entrezID
-  gene = gene[gene<0.05]
+  gene <- pvalues[!is.na(names(pvalues))]
+  gene <- gene[gene<input$pv.DomainsSEA]
   
-  ## ANALYSIS ##
-  pDomains.SEA = enricher(names(gene), 
-                          TERM2GENE = pD.TERM2GENE,
-                          TERM2NAME = pD.TERM2NAME,
-                          minGSSize = minGS,
-                          maxGSSize = maxGS,
-                          pAdjustMethod = pvAdjustMethod)
+  # names(gene) <- entrezID
+  observe({gene_vec()})
+  gene_vec <- eventReactive(input$pv.DomainsSEA,{
+    gene <- gene[gene<input$pv.DomainsSEA]
+    gene
+  })
+    
+    
+    ## ANALYSIS ##
+    # pD.TERM2GENE <- pD.TERM2GENE[pD.TERM2GENE$interpro != "",]
+    pd = (pD.TERM2GENE[pD.TERM2GENE$interpro != "",])
+    print("D2BUT SEA")
+    pDomains.SEA <- ORA(mapping = pd, DE_genes = names(gene))
+  
+  
+  # pDomains.SEA = enricher(names(gene), 
+  #                         TERM2GENE = pD.TERM2GENE,
+  #                         TERM2NAME = pD.TERM2NAME,
+  #                         minGSSize = minGS,
+  #                         maxGSSize = maxGS,
+  #                         pAdjustMethod = pvAdjustMethod)
   
   ## TABLE ## 
-  proteinDomains.SEA_description = dplyr::select(pDomains.SEA@result, ID, Description)
-  proteinDomains.SEA_description$ID = paste0("<a href=https://www.ebi.ac.uk/interpro/entry/InterPro/", 
-                                             proteinDomains.SEA_description$ID," target='_blank'>",proteinDomains.SEA_description$ID,"</a>")
-  proteinDomains.SEA_value = dplyr::select(pDomains.SEA@result, everything(), -ID, -Description , -GeneRatio, -geneID,-BgRatio) %>% round(5)
-  proteinDomains.SEA = cbind(proteinDomains.SEA_description, proteinDomains.SEA_value)
-  proteinDomains.SEAtoSAVE = dplyr::select(proteinDomains.SEA, everything(), -ID)
-  
+  # proteinDomains.SEA_description = dplyr::select(pDomains.SEA@result, ID, Description)
+  # proteinDomains.SEA_description$ID = paste0("<a href=https://www.ebi.ac.uk/interpro/entry/InterPro/", 
+  #                                            proteinDomains.SEA_description$ID," target='_blank'>",proteinDomains.SEA_description$ID,"</a>")
+  # proteinDomains.SEA_value = dplyr::select(pDomains.SEA@result, everything(), -ID, -Description , -GeneRatio, -geneID,-BgRatio) %>% round(5)
+  # proteinDomains.SEA = cbind(proteinDomains.SEA_description, proteinDomains.SEA_value)
+  # proteinDomains.SEAtoSAVE = dplyr::select(proteinDomains.SEA, everything(), -ID)
+  pDomains.SEAtoPlot <- pDomains.SEA
+  pDomains.SEAtoPlot$interpro = paste0("<a href=https://www.ebi.ac.uk/interpro/entry/InterPro/",
+                                       pDomains.SEAtoPlot$interpro," target='_blank'>", pDomains.SEAtoPlot$interpro,"</a>")
+  # print(head(pDomains.SEA, n = 5))
   output$proteinDomains.SEA.Table = DT::renderDataTable({
-    proteinDomains.SEA
+    # proteinDomains.SEA
+    pDomains.SEAtoPlot
   }, escape = F) # escape FALSE to make url
   
   output$dl.pDomains <- downloadHandler(
     filename = "proteinDomainsResults_SEA.csv",
     content = function(filename) {
-      write.csv(proteinDomains.SEAtoSAVE, filename, row.names = T)
+      write.csv(pDomains.SEA, filename, row.names = T)
     }
   )
   ## PLOTS ##
-  output$dotPlot.pDomains <- renderPlot({ clusterProfiler::dotplot(pDomains.SEA, showCategory=input$categNb_DP.D, ) + ggtitle("dotplot for SEA") })
+  # DP.pDomains <- clusterProfiler::dotplot(pDomains.SEA, showCategory=input$categNb_DP.D, ) + ggtitle("dotplot for SEA")
+  pDomains.SEA
+  DP.pDomains <- ggplot(dplyr::arrange(pDomains.SEA, pval)[1:12,], aes(x = interpro, y = DE_n/size, fill = pval)) + geom_col() + ggtitle("Protein domains dotplot for SEA")
+  # DP.pDomains <- ggplot(dplyr::arrange(pDomains.SEA, pval)[1:input$categNb_DP.D,], aes(x = interpro, y = DE_n/size, fill = pval)) + geom_col() + ggtitle("Protein domains dotplot for SEA")
+  output$dotPlot.pDomains <- renderPlot({ DP.pDomains })
+  
+  ## DOWNLOAD PLOT
+  output$dl.SEAproteinDomainsDotPlot <- downloadHandler(
+    filename = "proteinDomainsDotPlot_SEA.pdf",
+    content = function(file) 
+    {
+      ggsave(file, plot=DP.pDomains)
+    }
+  )
+  
   
   ########################################################
   ##########  Motifs  ##########
@@ -90,8 +141,27 @@ proteinDomain <- function(input, output, session, org, organismsDbKegg, pvalues,
     }, escape = F) # escape FALSE to make url
     
     ## PLOTS ##
-    incProgress(2/2, detail = "Results plots...")    
-    output$dotPlot.Motif <- renderPlot({ dotplot(motifs.GSEA, showCategory=input$categNb_DP.M, ) + ggtitle("dotplot for GSEA") })
-    output$ridgePlot.Motif <- renderPlot({ ridgeplot(motifs.GSEA, showCategory=input$categNb_RP.M) })
+    incProgress(2/2, detail = "Results plots...")   
+    Motif.DP <- dotplot(motifs.GSEA, showCategory=input$categNb_DP.M ) + ggtitle("Motif dotplot for GSEA") 
+    output$dotPlot.Motif <- renderPlot({ dotplot(motifs.GSEA, showCategory=input$categNb_DP.M ) + ggtitle("Motif dotplot for GSEA")  })
+    Motif.RP <- ridgeplot(motifs.GSEA, showCategory=input$categNb_RP.M) + ggtitle("Motif Ridge Plot for GSEA") 
+    output$ridgePlot.Motif <- renderPlot({ ridgeplot(motifs.GSEA, showCategory=input$categNb_RP.M) + ggtitle("Motif Ridge Plot for GSEA")  })
+    
+    ## DOWNLOAD DOTPLOT
+    output$dl.GSEAmotifDotPlot <- downloadHandler(
+      filename = "motifDotPlot_GSEA.pdf",
+      content = function(file) 
+      {
+        ggsave(file, plot=Motif.DP)
+      }
+    )
+    
+    output$dl.SEAmotifRidgePlot <- downloadHandler(
+      filename = "motifRidgePlot_GSEA.pdf",
+      content = function(file) 
+      {
+        ggsave(file, plot=Motif.RP)
+      }
+    )
   })
 }

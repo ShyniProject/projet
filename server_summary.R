@@ -15,10 +15,17 @@ summary <- function(input, output, session, RNAseqDF)
       
       incProgress(1/2, detail = "Volcano Plot...")
       
+      VPlot <- VolcanoPlot(dataFiltered)
       output$volcanoPlot <- renderPlot({ 
-        VolcanoPlot(dataFiltered)
+        VPlot
       })
-      
+      output$dl.volcanoPlot <- downloadHandler(
+        filename = "VolcanoPlot.pdf",
+        content = function(file) 
+        {
+          ggsave(file, plot=VPlot)
+        }
+      )
       observe({clickVolc()})
       clickVolc <- eventReactive(input$plot_click.Volcano,{
         
@@ -30,10 +37,18 @@ summary <- function(input, output, session, RNAseqDF)
         }, rownames = T)})
       
       incProgress(2/2, detail = "MA Plot...")
+      MPlot <- MaPlot(dataFiltered)
       output$maPlot <- renderPlot({
-        MaPlot(dataFiltered)
+        MPlot
       })
       
+      output$dl.maPlot <- downloadHandler(
+        filename = "maPlot.pdf",
+        content = function(file) 
+        {
+          ggsave(file, plot=MPlot)
+        }
+      )
       
       observe({clickMA()})
       clickMA <- eventReactive(input$plot_click.MA,{

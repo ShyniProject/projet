@@ -46,8 +46,8 @@ kegg <- function(input, output, session, org, organismsDbKegg, pvalues, logF, mi
       
       ## PLOTS ##
       incProgress(2/3, detail = "Enrichment dot plot...")
-      keggDP <- clusterProfiler::dotplot(Kegg.SEA, showCategory=input$categNb_DP_SEAK) + ggtitle("dotplot for SEA") 
-      output$dotPlot.KEGG_SEA <- renderPlot({ keggDP })
+      keggDP <- clusterProfiler::dotplot(Kegg.SEA, showCategory=input$categNb_DP_SEAK) + ggtitle("KEGG enrichment dotplot for SEA") 
+      output$dotPlot.KEGG_SEA <- renderPlot({ clusterProfiler::dotplot(Kegg.SEA, showCategory=input$categNb_DP_SEAK) + ggtitle("KEGG enrichment dotplot for SEA")  })
       
       ## DOWNLOAD PLOT
       output$dl.KEGG_dotPlot <- downloadHandler(
@@ -117,12 +117,12 @@ kegg <- function(input, output, session, org, organismsDbKegg, pvalues, logF, mi
     
     ## PLOTS ##
     incProgress(3/5, detail = "Enrichment dot plot...")
-    DPKeggGSEA <- dotplot(Kegg.GSEA, showCategory=input$categNb_DP) + ggtitle("dotplot for GSEA")
-    output$dotPlot.KEGG <- renderPlot({ DPKeggGSEA })
+    DPKeggGSEA <- dotplot(Kegg.GSEA, showCategory=input$categNb_DP) + ggtitle("KEGG enrichment dotplot for GSEA")
+    output$dotPlot.KEGG <- renderPlot({ dotplot(Kegg.GSEA, showCategory=input$categNb_DP) + ggtitle("KEGG enrichment dotplot for GSEA") })
     
     incProgress(4/5, detail = "Enrichment ridge plot...")
-    RPKeggGSEA <- ridgeplot(Kegg.GSEA, showCategory=input$categNb_RP)
-    output$ridgePlot.kegg <- renderPlot({ RPKeggGSEA })
+    RPKeggGSEA <- ridgeplot(Kegg.GSEA, showCategory=input$categNb_RP) + ggtitle("KEGG enrichment ridge plot for GSEA")
+    output$ridgePlot.kegg <- renderPlot({ ridgeplot(Kegg.GSEA, showCategory=input$categNb_RP) + ggtitle("KEGG enrichment ridge plot for GSEA") })
     
     ## DOWNLOAD GSEA DOTPLOT
     output$dl.KEGG_dotPlotGSEA <- downloadHandler(

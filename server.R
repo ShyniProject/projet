@@ -6,13 +6,12 @@ function(input, output, session)
   source("server_go.R")
   source("server_proteinDomain.R")
   
-  ##### ATTENTION pour l'instant l'upload du fichier lance les analyses, avant le choix de l'espèce donc.
   choices <- userChoices(input, output, session)
   observe({
     analysis()
   })
   
-  analysis <- eventReactive(input$data,{
+  analysis <- eventReactive(input$start,{
     # orgDb <- eval(parse(text = org(), keep.source=FALSE))
     orgDb <- eval(parse(text = choices()$org, keep.source=FALSE))
     org <- choices()$org
@@ -86,7 +85,7 @@ function(input, output, session)
     
     ########################################################
     ##########  KEGG  ##########
-    ########################################################library(gdc)
+    ########################################################
     organismsDbKegg = c("org.Hs.eg.db"="hsa","org.Mm.eg.db"="mmu","org.Rn.eg.db"="rno",
                         "org.Sc.sgd.db"="sce","org.Dm.eg.db"="dme","org.At.tair.db"="ath",
                         "org.Dr.eg.db"="dre","org.Bt.eg.db"="bta","org.Ce.eg.db"="cel",

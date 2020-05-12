@@ -11,6 +11,7 @@
 library(shiny)
 library(shinydashboard)
 library(shinydashboardPlus)
+library(shinyWidgets)
 library(shinycssloaders)
 library(shinyalert)# for file format checking
 library(ggplot2)
