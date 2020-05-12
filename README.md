@@ -47,14 +47,14 @@ Whole data inspection
 
 
 	#Respect header order
-	#Specifiy specie
+	#Specifiy species
 
 
 *Volcano Plot & MA plot*
 
 
-	#Two sliders to specify log(CPM)cetoff and padj on the plots
-	#clickable point on plots to show line af the corresponding point
+	#Two sliders to specify log(CPM)cutoff and padj on the plots
+	#Clickable points on plots to show line of the corresponding point
 
 
 Pathways - SEA & GSEA
@@ -62,7 +62,7 @@ Pathways - SEA & GSEA
 
 *Descriptive table of data*
 
-	#Donwloadable 
+	#Downloadable 
 	#Clickable links
 
 
@@ -94,7 +94,7 @@ Domains - SEA & GSEA
 
 *Descriptive table*
 
-	#Donwloadable 
+	#Downloadable 
 	#Clickable links
 
 *Dot plot with domains significantly enriched as a function of the gene ratio (number of genes in the dataset differentially expressed on the number of genes that make up the pathway)*
