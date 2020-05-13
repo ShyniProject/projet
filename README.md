@@ -38,7 +38,7 @@ How to run ?
 Threshold selection
 ---
 
-User can choose and modify the threshold in the application
+Users can choose and modify the threshold in the application
 
 Whole data inspection
 ---
