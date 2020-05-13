@@ -149,6 +149,11 @@ GO
 
 ![](./Images/Barplot_Molecular_Function_GSEA.png)
 
+Be carreful
+---
+
+A genome that is poorly or badly annotated will not allow a correct enrichment analysis because the detection of the genes will be too weak. Indeed, each database does not have annotations for all the information of another, for example ENSEMBL has many annotations that NCBI does not have, hence a lack in the conversion. In the case of conversion between two databases, the number of genes can drastically affect the integrity of the data and therefore conclusions cannot be guaranteed
+
 ## Authors
 
 Jerôme Arnoux
