@@ -8,7 +8,7 @@ The application is composed of 4 parts : Whole data inspection, pathways, gene o
 Input Format
 ---
 
-csv or text/csv file only with "id" for gene ID, "padj" for p-values adjusted and "log2FoldChange" columns.
+csv or text/csv file only with "id" for gene ID, "padj" for p-values adjusted, "basemean" and "log2FoldChange" columns.
 
 	#Choose the organism
 	#Choose the id database origin from databases available for the organism 
