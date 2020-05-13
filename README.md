@@ -35,7 +35,10 @@ How to run ?
 	#Run
 	
 
+Threshold selection
+---
 
+User can choose and modify the threshold in the application
 
 Whole data inspection
 ---
