@@ -140,7 +140,7 @@ GO
 
 
 
-*Representation of main differentially expressed Molecular fonction*
+*Representation of main differentially expressed Molecular function*
 	
 	# SEA Histogram with corresponding descriptive table 
 	# GSEA Barplot with correspondong descriptive table
