@@ -28,15 +28,13 @@ The test [dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE129081)
 
 How to run ?
 ---
-*First Option*
+
 
 	#Git Clone
 	#Open ui.R on Rstudio
 	#Run
 	
-*Second Option*
 
-Use the following [link](https://jflorian.shinyapps.io/EASE/)
 
 
 Whole data inspection
