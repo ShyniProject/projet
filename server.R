@@ -6,21 +6,18 @@ function(input, output, session)
   source("server_go.R")
   source("server_proteinDomain.R")
   
-  ##### ATTENTION pour l'instant l'upload du fichier lance les analyses, avant le choix de l'espèce donc.
   choices <- userChoices(input, output, session)
   observe({
     analysis()
   })
   
-  analysis <- eventReactive(input$data,{
-    # orgDb <- eval(parse(text = org(), keep.source=FALSE))
+  analysis <- eventReactive(input$start,{
     orgDb <- eval(parse(text = choices()$org, keep.source=FALSE))
     org <- choices()$org
     minGS <- choices()$minGS
     maxGS <- choices()$maxGS
     nPerm <- choices()$nPerm
     pvAdjustMethod = choices()$pvAdjust
-    
     
     ########################################################
     ##########  data type check  ##########
@@ -44,7 +41,7 @@ function(input, output, session)
     ##########  data preprocesses  ##########
     ########################################################
     ## RNAseq data for test ##
-    # d <- read.csv("bims/GSE129081_small.csv")
+    # d <- read.csv("GSE129081_small.csv")
     # entrezID <- mapIds(org.Dr.eg.db, as.vector(d$id), 'ENTREZID', 'ENSEMBL')
     
     d <- read.csv(input$data$datapath)
@@ -79,14 +76,15 @@ function(input, output, session)
     }
 
     logF = sort(logF, decreasing = TRUE) # decreasing vector to gsea
+    
     ########################################################
     ##########  SUMMARY  ##########
     ########################################################
-    summary(input, output, session, d)
+    # summary(input, output, session, d)
     
     ########################################################
     ##########  KEGG  ##########
-    ########################################################library(gdc)
+    ########################################################
     organismsDbKegg = c("org.Hs.eg.db"="hsa","org.Mm.eg.db"="mmu","org.Rn.eg.db"="rno",
                         "org.Sc.sgd.db"="sce","org.Dm.eg.db"="dme","org.At.tair.db"="ath",
                         "org.Dr.eg.db"="dre","org.Bt.eg.db"="bta","org.Ce.eg.db"="cel",
@@ -95,7 +93,7 @@ function(input, output, session)
                         "org.Pt.eg.db"="ptr","org.Ag.eg.db"="aga","org.Pf.plasmo.db"="pfa",
                         "org.EcSakai.eg.db"="ecs")
     
-    kegg(input, output, session, org, organismsDbKegg, pvalues, logF, minGS, maxGS, nPerm, pvAdjustMethod)
+    # kegg(input, output, session, org, organismsDbKegg, pvalues, logF, minGS, maxGS, nPerm, pvAdjustMethod)
 
     ########################################################
     ##########  Protein Domains  ##########

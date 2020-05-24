@@ -11,6 +11,7 @@
 library(shiny)
 library(shinydashboard)
 library(shinydashboardPlus)
+library(shinyWidgets)
 library(shinycssloaders)
 library(shinyalert)# for file format checking
 library(ggplot2)
@@ -25,8 +26,7 @@ library(pathview) # kegg pathways png
 library(DOSE)
 library(PPInfer)
 ## annotation files for mapID()
-library(org.Dr.eg.db) 
-library(org.Dm.eg.db) 
+library(org.Dr.eg.db)
 
 
 source("ui_summary.R")
@@ -42,8 +42,6 @@ dashboardPage(
             menuItem("Pathways", tabName = "pathways", icon = icon("project-diagram")),
             menuItem("GO terms", tabName = "GO", icon = icon("sitemap")),
             menuItem("Protein Domains", tabName = "domains", icon = icon("bullseye")))
-        
-        
     ),
     dashboardBody(
         tabItems(

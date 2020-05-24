@@ -5,8 +5,6 @@ go <- function(input, output, session, org, orgDb, pvalues, logF, minGS, maxGS, 
   ########################################################
   source(file = "GO_term.R")
   
-  # dataFilteredGO <-  DataFilterGO(d)
-  
   ########################## GO SEA #######################################
   observe({SEA_GO()})
   SEA_GO <- eventReactive(input$pv.GO,{

@@ -14,7 +14,15 @@ summary = tabItem(tabName = "summary",
                     fluidRow(column(width = 12, align = "center", 
                                     h2("Welcome to our enrichment analysis shiny application for RNA-seq data !"),
                                     h1("Put your .csv file\n"),
-                                    em("csv or text/csv files only with \"id\" for ENSEMBL genes ID, \"padj\" for p-values adjusted and \"log2FoldChange\" columns.\n\n"),
+                                    em("For input format, please refer to github's README available at\n"),
+                                    appButton(
+                                      url = "https://github.com/ShinyProject/projet",
+                                      label = "Our Github",
+                                      icon = "fa fa-github",
+                                      enable_badge = TRUE,
+                                      badgeColor = "red",
+                                      badgeLabel = "new"
+                                    ),
                                     ## FILE INPUT
                                     column(width = 7, align = "center", offset = 2,
                                            fileInput("data", label = NULL,
@@ -35,9 +43,9 @@ summary = tabItem(tabName = "summary",
                                       selectInput("geneidDb",icon("database"), choices = NULL, selected = NULL)
                                     ),
                                     column(width = 7, align = "center", offset = 2,
-                                      h1("Enrichment details\n"),
-                                        box(collapsible = TRUE,
-                                               title = span(icon("Gear")), status = "primary", width = NULL,
+                                      h1("Enrichment parameters\n"),
+                                        box(collapsible = TRUE, collapsed = TRUE,
+                                               title = span(icon("gear")), status = "primary", width = NULL,
                                                column(width = 6,
                                                       numericInput("minGSSize", "Minimal number of genes in pathways:", value = 5, min = 1, max = 5000, step = 1)
                                                ),
@@ -45,12 +53,19 @@ summary = tabItem(tabName = "summary",
                                                       numericInput("maxGSSize", "Maximal number of genes in pathways:", value = 800, min = 1, max = 5000, step = 1)
                                                ),
                                                column(width = 6,
-                                                      numericInput("nPerm", "Permutation number for GSEA's p-values:", value = 800, min = 1, max = 5000, step = 1)
+                                                      numericInput("nPerm", "Permutation number for GSEA's p-values:", value = 10000, min = 1, max = 5000, step = 1)
                                                ),
                                                column(width = 6,
                                                       selectInput("pvAdjust","p-value correction method:", choices = NULL, selected = NULL)
                                                ),
                                         ),
+                                        actionBttn(
+                                          inputId = "start",
+                                          label = "Go!",
+                                          color = "success",
+                                          style = "material-flat",
+                                          icon = icon("rocket", lib = "font-awesome"),
+                                      ),
                                     )
                     )),
                     useShinyalert(), #if data type not supported only
@@ -69,13 +84,14 @@ summary = tabItem(tabName = "summary",
                          box(collapsible = TRUE,
                              title = "Volcano plot", status = "info", width = NULL,
                              column(width = 11,
-                                    plotOutput("volcanoPlot",click='plot_click.Volcano') %>% withSpinner(color = "#b68f40", type = 6)
+                                    plotOutput("volcanoPlot",click='plot_click.Volcano') %>% withSpinner(color = "#b68f40", type = 6),
+                                    downloadButton("dl.volcanoPlot", "Download")
                              )
                          ), 
                          box(collapsible = TRUE,
                              title = "Selected point in Volcano Plot", status = "info", width = NULL,
                              column(width = 11,
-                                    tableOutput("clickedPoints.Volcano") 
+                                    tableOutput("clickedPoints.Volcano"),
                              )
                          ),
                          
@@ -86,7 +102,8 @@ summary = tabItem(tabName = "summary",
                          box(collapsible = TRUE,
                              title = "MA plot", status = "info", width = NULL,
                              column(width = 11,
-                                    plotOutput("maPlot",click='plot_click.MA') %>% withSpinner(color = "#b68f40", type = 6)
+                                    plotOutput("maPlot",click='plot_click.MA') %>% withSpinner(color = "#b68f40", type = 6),
+                                    downloadButton("dl.maPlot", "Download")
                              )
                          ), 
                          box(collapsible = TRUE,
