@@ -40,10 +40,6 @@ function(input, output, session)
     ########################################################
     ##########  data preprocesses  ##########
     ########################################################
-    ## RNAseq data for test ##
-    # d <- read.csv("GSE129081_small.csv")
-    # entrezID <- mapIds(org.Dr.eg.db, as.vector(d$id), 'ENTREZID', 'ENSEMBL')
-    
     d <- read.csv(input$data$datapath)
     ## gene ID database choice
     if (choices()$idDb == "ENTREZID")
@@ -80,7 +76,7 @@ function(input, output, session)
     ########################################################
     ##########  SUMMARY  ##########
     ########################################################
-    # summary(input, output, session, d)
+    summary(input, output, session, d)
     
     ########################################################
     ##########  KEGG  ##########
@@ -93,7 +89,7 @@ function(input, output, session)
                         "org.Pt.eg.db"="ptr","org.Ag.eg.db"="aga","org.Pf.plasmo.db"="pfa",
                         "org.EcSakai.eg.db"="ecs")
     
-    # kegg(input, output, session, org, organismsDbKegg, pvalues, logF, minGS, maxGS, nPerm, pvAdjustMethod)
+    kegg(input, output, session, org, organismsDbKegg, pvalues, logF, minGS, maxGS, nPerm, pvAdjustMethod)
 
     ########################################################
     ##########  Protein Domains  ##########
@@ -103,7 +99,7 @@ function(input, output, session)
     ########################################################
     ##########                GO                  ##########
     ########################################################      
-    # go(input, output, session, org, orgDb, pvalues, logF, minGS, maxGS, nPerm, pvAdjustMethod)
+    go(input, output, session, org, orgDb, pvalues, logF, minGS, maxGS, nPerm, pvAdjustMethod)
         
   } 
 )}
