@@ -96,13 +96,13 @@ proteinDomain <- function(input, output, session, org, organismsDbKegg, pvalues,
   ## PLOTS ##
   # DP.pDomains <- clusterProfiler::dotplot(pDomains.SEA, showCategory=input$categNb_DP.D, ) + ggtitle("dotplot for SEA")
   pDomains.SEA
-  DP.pDomains <- ggplot(dplyr::arrange(pDomains.SEA, pval)[1:12,], aes(x = interpro, y = DE_n/size, fill = pval)) + geom_col() + ggtitle("Protein domains dotplot for SEA")
+  DP.pDomains <- ggplot(dplyr::arrange(pDomains.SEA, pval)[1:12,], aes(x = interpro, y = DE_n/size, fill = pval)) + geom_col() + ggtitle("Protein domains histogram for SEA")
   # DP.pDomains <- ggplot(dplyr::arrange(pDomains.SEA, pval)[1:input$categNb_DP.D,], aes(x = interpro, y = DE_n/size, fill = pval)) + geom_col() + ggtitle("Protein domains dotplot for SEA")
   output$dotPlot.pDomains <- renderPlot({ DP.pDomains })
   
   ## DOWNLOAD PLOT
   output$dl.SEAproteinDomainsDotPlot <- downloadHandler(
-    filename = "proteinDomainsDotPlot_SEA.pdf",
+    filename = "proteinDomainsHistogram_SEA.pdf",
     content = function(file) 
     {
       ggsave(file, plot=DP.pDomains)

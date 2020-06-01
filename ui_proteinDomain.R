@@ -15,7 +15,7 @@ domains <- tabItem(tabName = "domains",
                                 )
                             ),
                             box(collapsible = TRUE,
-                                title = span(icon("sort-amount-up"), "Dot plot - SEA"), status = "info", width = NULL,
+                                title = span(icon("sort-amount-up"), "Histogram - SEA"), status = "info", width = NULL,
                                 column(width = 3,
                                        # numericInput("categNb_DP.D", "Category number : ", 10, min = 1, max = 40, step = 5),
                                        downloadButton("dl.SEAproteinDomainsDotPlot", "Download")  
