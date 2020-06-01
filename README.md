@@ -3,7 +3,7 @@
 EASE is an application to study the comprehensive functional analysis of a large gene set with 3 important fields integration : Pathways, gene ontology and protein domains.
 The application is composed of 4 parts : Whole data inspection, pathways, gene ontology and protein domains.
 
-[Application video presentation ](https://www.youtube.com/watch?v=Ft9iACTbhrA&t=3s)
+[Application video presentation ](https://youtu.be/lUbX-7zE8Ns)
 
 Input Format
 ---
