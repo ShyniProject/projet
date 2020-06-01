@@ -1,13 +1,14 @@
-# EASE - Enrichment Analysis Shiny Environment
+# EASE - Enrichment Analysis in a Shiny Environment
 
 EASE is an application to study the comprehensive functional analysis of a large gene set with 3 important fields integration : Pathways, gene ontology and protein domains.
 The application is composed of 4 parts : Whole data inspection, pathways, gene ontology and protein domains.
 
+[Application video presentation ](https://www.youtube.com/watch?v=Ft9iACTbhrA&t=3s)
 
 Input Format
 ---
 
-csv or text/csv file only with "id" for gene ID, "padj" for p-values adjusted and "log2FoldChange" columns.
+csv or text/csv file only with "id" for gene ID, "padj" for p-values adjusted, "basemean" and "log2FoldChange" columns.
 
 	#Choose the organism
 	#Choose the id database origin from databases available for the organism 
@@ -35,7 +36,10 @@ How to run ?
 	#Run
 	
 
+Threshold selection
+---
 
+Users can choose and modify the threshold in the application
 
 Whole data inspection
 ---
@@ -137,7 +141,7 @@ GO
 
 
 
-*Representation of main differentially expressed Molecular fonction*
+*Representation of main differentially expressed Molecular function*
 	
 	# SEA Histogram with corresponding descriptive table 
 	# GSEA Barplot with correspondong descriptive table
@@ -146,7 +150,14 @@ GO
 
 ![](./Images/Barplot_Molecular_Function_GSEA.png)
 
+Be carreful
+---
+
+A genome that is poorly or badly annotated will not allow a correct enrichment analysis because the detection of the genes will be too weak. Indeed, each database does not have annotations for all the information of another, for example ENSEMBL has many annotations that NCBI does not have, hence a lack in the conversion. In the case of conversion between two databases, the number of genes can drastically affect the integrity of the data and therefore conclusions cannot be guaranteed
+
 ## Authors
+
+Projet réalisé dans le cadre scolaire au cours du M2.1 BIMS de l'université de Rouen 2019-2020
 
 Jerôme Arnoux
 
@@ -157,5 +168,3 @@ Alba Caparros-Roissard
 Florian Jeanneret
 
 Maud Repellin
-
-
