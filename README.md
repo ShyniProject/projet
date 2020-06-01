@@ -157,6 +157,8 @@ A genome that is poorly or badly annotated will not allow a correct enrichment a
 
 ## Authors
 
+Projet réalisé dans le cadre scolaire au cours du M2.1 BIMS de l'université de Rouen 2019-2020
+
 Jerôme Arnoux
 
 Chloé Beaumont
@@ -166,5 +168,6 @@ Alba Caparros-Roissard
 Florian Jeanneret
 
 Maud Repellin
+
 
 
