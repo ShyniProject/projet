@@ -5,7 +5,7 @@ The application is composed of 4 parts : Whole data inspection, pathways, gene o
 
 [Application video presentation ](https://youtu.be/lUbX-7zE8Ns)
 
-*The Gene set enrichment analysis* ([GSEA](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1239896/)) is a method to identify classes of genes or proteins that are over-represented in a large set of genes or proteins. The method uses statistical approaches to identify significantly enriched or depleted groups of genes. 
+**The Gene set enrichment analysis** ([GSEA](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1239896/)) is a method to identify classes of genes or proteins that are over-represented in a large set of genes or proteins. The method uses statistical approaches to identify significantly enriched or depleted groups of genes. 
 
 The general steps of GSEA method are :
 	1. Calculate the enrichment score (ES) that represents the amount to which the genes in the set are over-represented at either the top or bottom of the list. This score is a Kolmogorov–Smirnov-like statistic
@@ -14,7 +14,7 @@ The general steps of GSEA method are :
 
 The GSEA method has been criticized for the fact that the Kolmogorov–Smirnov-like statistic is not as sensitive as the t-test statistic.
 
-*The Simpler Enrichment Analysis* [SEA](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3758419/) method assumes gene independence and uses a simpler approach to calculate t-test. However, it is thought that these assumptions are in fact too simplifying, and gene correlation cannot be disregarded.
+**The Simpler Enrichment Analysis** [SEA](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3758419/) method assumes gene independence and uses a simpler approach to calculate t-test. However, it is thought that these assumptions are in fact too simplifying, and gene correlation cannot be disregarded.
 
 Input Format
 ---
