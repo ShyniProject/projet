@@ -41,7 +41,7 @@ The test [dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE129081)
 
 How to run ?
 ---
-
+This application was developped with R version 3.6.3.
 
 	#Git Clone
 	#Open ui.R on Rstudio
