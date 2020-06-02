@@ -111,7 +111,7 @@ Domains - SEA & GSEA
 	#Downloadable 
 	#Clickable links
 
-*Dot plot with domains significantly enriched as a function of the gene ratio (number of genes in the dataset differentially expressed on the number of genes that make up the pathway)*
+*Dot plot with domains significantly enriched as a function of the gene ratio (number of genes in the dataset differentially expressed on the number of genes that make up the domain)*
 
 	#Specifiy number of category
 
