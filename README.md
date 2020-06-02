@@ -15,7 +15,7 @@ The general steps of GSEA method are :
 
 The GSEA method has been criticized for the fact that the Kolmogorov–Smirnov-like statistic is not as sensitive as the t-test statistic.
 
-**The Simpler Enrichment Analysis** [SEA](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3758419/) method assumes gene independence and uses a simpler approach to calculate t-test. However, it is thought that these assumptions are in fact too simplifying, and gene correlation cannot be disregarded.
+**The Simpler Enrichment Analysis** ([SEA])(https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3758419/) method assumes gene independence and uses a simpler approach to calculate t-test. However, it is thought that these assumptions are in fact too simplifying, and gene correlation cannot be disregarded.
 
 Input Format
 ---
