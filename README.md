@@ -66,6 +66,10 @@ Whole data inspection
 
 *Volcano Plot & MA plot*
 
+The Volcano Plot shows statistical significance (P value) versus magnitude of change (fold change).
+
+The MA plot is an application of a Bland–Altman plot for visual representation of genomic data. The plot visualizes the differences between measurements taken in two samples, by transforming the data onto M (log ratio) and A (mean average) scales, then plotting these values.
+
 
 	#Two sliders to specify log(CPM)cutoff and padj on the plots
 	#Clickable points on plots to show line of the corresponding point
@@ -94,7 +98,7 @@ Pathways - SEA & GSEA
 	#drop-down list to choose pathway to see
 
 
-*GSEA only Ridge plot*
+*GSEA only Ridge plot*  that uses the values of expressions (log fold change) and displays the distributions of these values for each gene of each pathway.
 
 	#Specifiy number of category
 
